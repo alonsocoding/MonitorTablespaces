@@ -16,6 +16,8 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.ValueMarker;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 
@@ -123,7 +125,7 @@ public class MonitorFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       try {
+        try {
            conn=Monitor.Enlace(conn);
            res=Monitor.TableRes(res);
            ResultSetMetaData Res_md = res.getMetaData();
@@ -149,6 +151,7 @@ public class MonitorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         int selectedRow = jTable1.getSelectedRow();
@@ -162,6 +165,9 @@ public class MonitorFrame extends javax.swing.JFrame {
         ChartPanel CP = new ChartPanel(chart);
         jPanel1.add(CP,BorderLayout.CENTER);
         jPanel1.validate();
+        
+     
+       
     }//GEN-LAST:event_jTable1MouseClicked
 
     /**
