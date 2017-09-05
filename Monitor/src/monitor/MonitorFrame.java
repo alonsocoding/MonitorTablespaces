@@ -5,19 +5,28 @@
  */
 package monitor;
 
+import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartRenderingInfo;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.entity.StandardEntityCollection;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.ValueMarker;
-import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.GroupedStackedBarRenderer;
+import org.jfree.data.KeyToGroupMap;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 
@@ -155,18 +164,20 @@ public class MonitorFrame extends javax.swing.JFrame {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         int selectedRow = jTable1.getSelectedRow();
-        dataset.setValue((Number) modelo.getValueAt(selectedRow, 3), "Space", modelo.getValueAt(selectedRow, 0).toString());
+        //dataset.setValue((Number) modelo.getValueAt(selectedRow, 3), "Space", modelo.getValueAt(selectedRow, 0).toString());
+       
+        dataset.addValue((Number) modelo.getValueAt(selectedRow, 1), "Used Space", modelo.getValueAt(selectedRow, 0).toString());
+        dataset.addValue((Number) modelo.getValueAt(selectedRow, 2), "Free Space", modelo.getValueAt(selectedRow, 0).toString());
+     
         
-        
-        JFreeChart chart = ChartFactory.createBarChart("Tablespaces", "Name", "Space", dataset, PlotOrientation.HORIZONTAL, false, true, false);
+        JFreeChart chart = ChartFactory.createStackedBarChart("Tablespaces", "Name", "Space", dataset, PlotOrientation.HORIZONTAL, false, true, false);
         CategoryPlot p = chart.getCategoryPlot();
         p.setRangeGridlinePaint(Color.black);
         jPanel1.setLayout(new java.awt.BorderLayout());
         ChartPanel CP = new ChartPanel(chart);
         jPanel1.add(CP,BorderLayout.CENTER);
         jPanel1.validate();
-        
-     
+
        
     }//GEN-LAST:event_jTable1MouseClicked
 
