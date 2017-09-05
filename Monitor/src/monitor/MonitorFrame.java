@@ -205,6 +205,16 @@ public class MonitorFrame extends javax.swing.JFrame {
                modelo.addColumn(Res_md.getColumnLabel(i));
            }
            while(res.next()) {
+               /* Convertir el resultset en un objeto tablespace 
+               Tablespace ts = new Tablespace();
+               ts.setName(res.getString("tablespace_name"));
+               ts.setTotal_space(res.getInt("totalspace"));
+               ts.setFree_space(res.getInt("totalfreespace"));
+               ts.setUsed_space(res.getInt("totalusedspace"));               
+               */
+               
+               
+               
                Object[] fila = new Object[cantidad_columnas];
                for(int i=0; i < cantidad_columnas; i++) {
                    fila[i] = res.getObject(i+1);

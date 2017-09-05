@@ -48,3 +48,14 @@ select df.tablespace_name "Tablespace",
          group by tablespace_name) tu
  where df.tablespace_name = tu.tablespace_name 
    and df.totalspace <> 0;
+
+
+   create table bases.grafico(
+     fecha date,
+     name varchar(25),
+     usedMB integer,
+     freeMB integer,
+     freePr float,
+     totalMB integer,
+     hwm float
+   );
