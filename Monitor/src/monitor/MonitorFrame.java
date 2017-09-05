@@ -8,6 +8,11 @@ package monitor;
 import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -71,6 +76,7 @@ public class MonitorFrame extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,6 +108,13 @@ public class MonitorFrame extends javax.swing.JFrame {
             .addGap(0, 234, Short.MAX_VALUE)
         );
 
+        jButton2.setText("Guardar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -114,7 +127,10 @@ public class MonitorFrame extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(0, 42, Short.MAX_VALUE))
         );
@@ -122,7 +138,9 @@ public class MonitorFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -135,27 +153,43 @@ public class MonitorFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
+           // Lectura de Archivo para columna HWM
+           String texto = "";
+           FileReader lector=new FileReader("./archivo.txt");
+           BufferedReader contenido=new BufferedReader(lector);
+           // Conexion con base y lanza sql
            conn=Monitor.Enlace(conn);
            res=Monitor.TableRes(res);
+           // Obtiene la cantidad de columnas
            ResultSetMetaData Res_md = res.getMetaData();
            int cantidad_columnas = Res_md.getColumnCount();
-           
+           // Agrega las columnas necesarias
            for(int i=1; i <= cantidad_columnas; i++) {
                modelo.addColumn(Res_md.getColumnLabel(i));
            }
+           // Agrega una extra para HWM
            modelo.addColumn("HWM");
+           // Ingresa a la tabla las filas 
            while(res.next()) {
-               Object[] fila = new Object[cantidad_columnas];
-               for(int i=0; i < cantidad_columnas; i++) {
-                   fila[i] = res.getObject(i+1);
+               Object[] fila = new Object[cantidad_columnas+1];
+               for(int i=0; i < cantidad_columnas+1; i++) {
+                   if(i == cantidad_columnas) { // Si llega al final esta en HWM
+                       texto = contenido.readLine(); // Lee archivo
+                       fila[i] = texto; // Ingresa valor
+                   } else { // Si no sigue en las otras columnas
+                        fila[i] = res.getObject(i+1); // Ingresa valor desde SQL
+                   }
                }
-               modelo.addRow(fila);
+               modelo.addRow(fila); // Ingresa la fila al table model
            }
            res.close();
            conn.close();
+           
+           
        } catch(Exception e) {
            e.printStackTrace();
        }
+
        
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -164,8 +198,7 @@ public class MonitorFrame extends javax.swing.JFrame {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         int selectedRow = jTable1.getSelectedRow();
-        //dataset.setValue((Number) modelo.getValueAt(selectedRow, 3), "Space", modelo.getValueAt(selectedRow, 0).toString());
-       
+
         dataset.addValue((Number) modelo.getValueAt(selectedRow, 1), "Used Space", modelo.getValueAt(selectedRow, 0).toString());
         dataset.addValue((Number) modelo.getValueAt(selectedRow, 2), "Free Space", modelo.getValueAt(selectedRow, 0).toString());
      
@@ -180,6 +213,22 @@ public class MonitorFrame extends javax.swing.JFrame {
 
        
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+        String ruta = "./archivo.txt";
+        File archivo = new File(ruta);
+        BufferedWriter bw;
+        bw = new BufferedWriter(new FileWriter(archivo));
+        for(int i=0; i<modelo.getRowCount(); i++) {
+            bw.write(modelo.getValueAt(i, 5).toString());
+            bw.newLine();
+        }
+        bw.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -219,6 +268,7 @@ public class MonitorFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
