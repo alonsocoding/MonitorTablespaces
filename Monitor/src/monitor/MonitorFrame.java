@@ -197,7 +197,7 @@ public class MonitorFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
        try {
            conn=Monitor.Enlace(conn);
-           res=Monitor.Res(res);
+           res=Monitor.TableRes(res);
            ResultSetMetaData Res_md = res.getMetaData();
            int cantidad_columnas = Res_md.getColumnCount();
            

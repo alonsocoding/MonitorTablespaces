@@ -27,10 +27,10 @@ TO
   books_admin;
 */ 
 --Create tables on user bases
-create table bases.t1(a int, b int);
+create table bases.t2(a int, b int);
 create index pkt1(a) on t1 on index;
 unique alter table add contraint pkt1 primary key;
-
+insert into t1 values(1,3);
 
 --Consultas
 select df.tablespace_name "Tablespace",
@@ -49,13 +49,45 @@ select df.tablespace_name "Tablespace",
  where df.tablespace_name = tu.tablespace_name 
    and df.totalspace <> 0;
 
+-- Recuperado de:
+-- https://stackoverflow.com/questions/15113716/how-to-determine-size-of-tablespace-oracle-11g
+--Sacar registros por table space....
+select count(*) from Student;
+select table_name from dba_segments where tablespace_name='Bschema';
+select count(*) from x;
+--Supuesta tabla a trabajar...!
+create table x(a int) tablespace Bschema;
 
-   create table bases.grafico(
-     fecha date,
-     name varchar(25),
-     usedMB integer,
-     freeMB integer,
-     freePr float,
-     totalMB integer,
-     hwm float
-   );
+
+
+
+--select de las tablas segun su tablespace...
+SELECT
+  table_name, owner
+FROM
+  all_tables
+  where tablespace_name='BSCHEMA';
+
+--Select los index del table_space...!
+select tablespace_name , owner, index_name, index_type, sample_size
+from all_indexes
+where owner = 'BASES';
+
+
+--Index de la table en bschema
+create table y(a int) tablespace Bschema;
+create index pky1 on y(a) tablespace BSCHEMA;
+
+
+--Index de la tabla sin decirle el schema
+create table lentes(a int) tablespace BSCHEMA;
+create index pkl1 on lentes(a);
+
+
+
+
+select tablespace_name , owner, index_name, index_type, sample_size
+from all_indexes
+where segment_name = 'lentes';
+
+and index_name = 'MYINDEX';

@@ -34,5 +34,24 @@ public class Monitor {
         rs = st.executeQuery("select tablespace_name from dba_segments group by tablespace_name");
         return rs;
     }
+    public static ResultSet TableRes(ResultSet rs) throws SQLException {
+        st = Sta(st);
+        rs = st.executeQuery("select df.tablespace_name \"Tablespace\",\n" +
+"       totalusedspace \"Used MB\",\n" +
+"       (df.totalspace - tu.totalusedspace) \"Free MB\",\n" +
+"       df.totalspace \"Total MB\",\n" +
+"       round(100 * ( (df.totalspace - tu.totalusedspace)/ df.totalspace)) \"Pct. Free\"\n" +
+"  from (select tablespace_name,\n" +
+"               round(sum(bytes) / 1048576) TotalSpace\n" +
+"          from dba_data_files \n" +
+"         group by tablespace_name) df,\n" +
+"       (select round(sum(bytes)/(1024*1024)) totalusedspace,\n" +
+"               tablespace_name\n" +
+"          from dba_segments \n" +
+"         group by tablespace_name) tu\n" +
+" where df.tablespace_name = tu.tablespace_name \n" +
+"   and df.totalspace <> 0");
+        return rs;
+    }
     
 }
