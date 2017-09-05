@@ -31,7 +31,7 @@ public class Monitor {
     }
     public static ResultSet Res(ResultSet rs) throws SQLException {
         st = Sta(st);
-        rs = st.executeQuery("select * from student");
+        rs = st.executeQuery("select tablespace_name from dba_segments group by tablespace_name");
         return rs;
     }
     
