@@ -5,34 +5,34 @@
  */
 package monitor;
 
-import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Stroke;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartRenderingInfo;
-import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.entity.StandardEntityCollection;
+import org.jfree.chart.labels.CategoryItemLabelGenerator;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.GroupedStackedBarRenderer;
-import org.jfree.data.KeyToGroupMap;
+import org.jfree.chart.plot.ValueMarker;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.StackedBarRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.ui.Layer;
 
 
 /**
@@ -203,15 +203,35 @@ public class MonitorFrame extends javax.swing.JFrame {
         dataset.addValue((Number) modelo.getValueAt(selectedRow, 2), "Free Space", modelo.getValueAt(selectedRow, 0).toString());
      
         
-        JFreeChart chart = ChartFactory.createStackedBarChart("Tablespaces", "Name", "Space", dataset, PlotOrientation.HORIZONTAL, false, true, false);
+        JFreeChart chart = ChartFactory.createStackedBarChart("Tablespaces", "Name", "Space", dataset, PlotOrientation.HORIZONTAL, true, true, false);
         CategoryPlot p = chart.getCategoryPlot();
         p.setRangeGridlinePaint(Color.black);
         jPanel1.setLayout(new java.awt.BorderLayout());
         ChartPanel CP = new ChartPanel(chart);
         jPanel1.add(CP,BorderLayout.CENTER);
         jPanel1.validate();
+        
+        int value = Integer.parseInt(modelo.getValueAt(selectedRow, 5).toString());
+        int total = (Integer.parseInt(modelo.getValueAt(selectedRow, 3).toString()) * value) / 100;
+   
+        Stroke stroke = new BasicStroke(2.0f);
+        ValueMarker marker = new ValueMarker(total);  // position is the value on the axis
+        marker.setPaint(Color.yellow);
+        marker.setStroke(stroke);
 
-       
+        CategoryPlot plot1 = chart.getCategoryPlot();
+        plot1.addRangeMarker(marker,Layer.FOREGROUND);
+        
+        // get renderer
+         StackedBarRenderer renderer = (StackedBarRenderer) chart.getCategoryPlot()
+               .getRenderer();
+         
+         // set label appearance and position
+         CategoryItemLabelGenerator lblGenerator = new StandardCategoryItemLabelGenerator();
+         renderer.setBaseItemLabelGenerator(lblGenerator);
+         renderer.setBaseItemLabelsVisible(true);
+         renderer.setBaseItemLabelPaint(Color.black);
+        
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
