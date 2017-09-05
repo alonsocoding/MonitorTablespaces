@@ -10,9 +10,9 @@ public class Monitor {
     static ResultSet rs = null;
     
     static String bd = "XE";
-    static String username = "myuser";
-    static String password = "macros98";
-    static String url = "jdbc:oracle:thin:@alonso-PC:1521:XE";
+    static String username = "bases";
+    static String password = "bases";
+    static String url = "jdbc:oracle:thin:@Josema:1521:XE";
     
     public static Connection Enlace(Connection conn) throws SQLException {
         try {

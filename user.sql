@@ -3,7 +3,6 @@ create user bases identified by bases;
 grant connect, resource, dba to bases;
 grant unlimited tablespace to bases;
 grant create session to bases;
-GRANT create session TO bases;
 GRANT create table TO bases;
 GRANT create view TO bases;
 GRANT create any trigger TO bases;
