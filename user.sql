@@ -85,9 +85,20 @@ create index pkl1 on lentes(a);
 
 
 
-
+--....................................................
 select tablespace_name , owner, index_name, index_type, sample_size
 from all_indexes
 where segment_name = 'lentes';
+
+select SUM(bytes) from user_extents where tablespace_name= 'BSCHEMA';
+
+
+select segment_type, bytes from dba_segments where tablespace_name= 'BSCHEMA';
+select SUM(bytes) from dba_segments where tablespace_name= 'BSCHEMA';
+select SUM(bytes) from dba_tables where tablespace_name= 'BSCHEMA';
+
+ select * from dba_data_files where tablespace_name  = 'BSCHEMA'; 
+
+
 
 and index_name = 'MYINDEX';
