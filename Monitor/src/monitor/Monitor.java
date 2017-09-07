@@ -69,6 +69,7 @@ public class Monitor {
     public static ResultSet countRegister(ResultSet rs, String table) throws SQLException {
         st = Sta(st);
         rs = st.executeQuery("select num_rows FROM dba_tables where table_name = '"+ table +"'");
+        //exec dbms_stats.gather_schema_stats('system'); hacer lo mismo con el owner deseado
         return rs;
     }
     
