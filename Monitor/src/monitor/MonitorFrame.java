@@ -53,7 +53,7 @@ public class MonitorFrame extends javax.swing.JFrame {
     static Connection conn=null;
     static Statement sta=null;
     static ResultSet res=null;
-    DefaultTableModel modelo = new DefaultTableModel();
+    static DefaultTableModel modelo = new DefaultTableModel();
     
     /**
      * Creates new form MonitorFrame
@@ -282,9 +282,66 @@ public class MonitorFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() { 
                new MonitorFrame().setVisible(true);
+              // guardarRegistros();
             }
         });
     }
+    
+    public static void guardarRegistros(){
+        try{
+            ResultSet tablespaces = null;
+            tablespaces = Monitor.Res(tablespaces);
+            ResultSetMetaData Res_tb = tablespaces.getMetaData();
+            int count = 1;
+            while(tablespaces.next()){
+                registros("BSCHEMA");
+                //registros(tablespaces.getObject(count).toString());
+                count++;
+            }
+            tablespaces.close();
+        } catch(Exception e) {
+           e.printStackTrace();
+       }
+    
+    }
+    
+    public static void registros(String tablespace){
+        try {
+        String ruta = "./"+tablespace+".txt";
+        File archivo = new File(ruta);
+        BufferedWriter bw;
+        ResultSet tables = null;
+        ResultSet sizeof = null;
+        ResultSet registros = null;
+        conn=Monitor.Enlace(conn);
+        bw = new BufferedWriter(new FileWriter(archivo));
+        tables = Monitor.allTables(tables, tablespace);
+        //ResultSetMetaData Res_md = tables.getMetaData();
+        int count = 1;
+        while(tables.next()){
+            String x = tables.getObject(count).toString();
+            sizeof = Monitor.sizeOfTable(res, tables.getObject(count).toString());
+            registros = Monitor.countRegister(res, tables.getObject(count).toString());
+            //String y = sizeof.getObject(1).toString();
+            String w = registros.getObject(1).toString();
+            //ResultSetMetaData Res_size = sizeof.getMetaData();
+            //ResultSetMetaData Res_register = registros.getMetaData();
+            bw.write(tables.getObject(count).toString()+ "   " + sizeof.getObject(1).toString()+ "   " + registros.getObject(1).toString());
+            bw.newLine();
+            count++;
+        }
+        bw.close();
+        tables.close();
+        sizeof.close();
+        registros.close();
+        conn.close();
+    
+       } catch(Exception e) {
+           e.printStackTrace();
+       }
+    
+    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
