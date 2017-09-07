@@ -78,6 +78,7 @@ public class MonitorFrame extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,6 +117,13 @@ public class MonitorFrame extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setText("Guardar Registros");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -129,6 +137,8 @@ public class MonitorFrame extends javax.swing.JFrame {
                         .addGap(41, 41, 41)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton3)
+                                .addGap(64, 64, 64)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -141,7 +151,8 @@ public class MonitorFrame extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -251,6 +262,11 @@ public class MonitorFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+   
+        guardarRegistros();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -283,7 +299,6 @@ public class MonitorFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() { 
                new MonitorFrame().setVisible(true);
-               guardarRegistros();
             }
         });
     }
@@ -295,8 +310,8 @@ public class MonitorFrame extends javax.swing.JFrame {
             tablespaces = Monitor.Res(tablespaces);
             ResultSetMetaData Res_tb = tablespaces.getMetaData();
             while(tablespaces.next()){
-                //registros("BSCHEMA");
-                registros(tablespaces.getObject(1).toString());
+                registros("BSCHEMA");
+                //registros(tablespaces.getObject(1).toString());
             }
             tablespaces.close();
             conn.close();
@@ -311,6 +326,7 @@ public class MonitorFrame extends javax.swing.JFrame {
         String ruta = "./"+tablespace+".txt";
         File archivo = new File(ruta);
         BufferedWriter bw;
+        conn=Monitor.Enlace(conn);
         ResultSet tables = null;
         ResultSet sizeof = null;
         ResultSet registros = null;
@@ -319,7 +335,8 @@ public class MonitorFrame extends javax.swing.JFrame {
         String z="";
         bw = new BufferedWriter(new FileWriter(archivo));
         tables = Monitor.allTables(tables, tablespace);
-        ResultSetMetaData Res_md = tables.getMetaData();
+        bw.write("Tabla Tamaño(bytes) Cant.Registros");
+        bw.newLine();
         while(tables.next()){
             x = tables.getObject(1).toString();
             sizeof = Monitor.sizeOfTable(res, x);
@@ -330,15 +347,14 @@ public class MonitorFrame extends javax.swing.JFrame {
             while(registros.next()){
             z = registros.getString(1);
             }
-            //ResultSetMetaData Res_size = sizeof.getMetaData();
-            //ResultSetMetaData Res_register = registros.getMetaData();
-            bw.write(x+ "   " + y+ "   " + z);
+            bw.write(x+ "," + y+ "," + z);
             bw.newLine();
         }
         bw.close();
         tables.close();
         sizeof.close();
         registros.close();
+        conn.close();
     
        } catch(Exception e) {
            e.printStackTrace();
@@ -350,6 +366,7 @@ public class MonitorFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

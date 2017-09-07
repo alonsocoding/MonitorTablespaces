@@ -68,7 +68,7 @@ public class Monitor {
     
     public static ResultSet countRegister(ResultSet rs, String table) throws SQLException {
         st = Sta(st);
-        rs = st.executeQuery("select count(*) from "+ table +"");
+        rs = st.executeQuery("select num_rows FROM dba_tables where table_name = '"+ table +"'");
         return rs;
     }
     

@@ -1,2 +1,3 @@
-X   22   4
-T1   66   0
+Tabla Tamaño(bytes) Cant.Registros
+X,22,4
+T1,66,2
