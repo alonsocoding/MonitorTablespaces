@@ -43,6 +43,7 @@ public class MonitorFrame extends javax.swing.JFrame {
 
     // Lista para guardar tablespaces
     public List<Tablespace> tables = new ArrayList<Tablespace>();
+    public static List<Table> table = new ArrayList<Table>();
     // Atributos para definir los tablespaces seleccionados
     public boolean System = false;
     public boolean Undo = false;
@@ -282,7 +283,7 @@ public class MonitorFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() { 
                new MonitorFrame().setVisible(true);
-              // guardarRegistros();
+               guardarRegistros();
             }
         });
     }
@@ -290,15 +291,15 @@ public class MonitorFrame extends javax.swing.JFrame {
     public static void guardarRegistros(){
         try{
             ResultSet tablespaces = null;
+            conn=Monitor.Enlace(conn);
             tablespaces = Monitor.Res(tablespaces);
             ResultSetMetaData Res_tb = tablespaces.getMetaData();
-            int count = 1;
             while(tablespaces.next()){
-                registros("BSCHEMA");
-                //registros(tablespaces.getObject(count).toString());
-                count++;
+                //registros("BSCHEMA");
+                registros(tablespaces.getObject(1).toString());
             }
             tablespaces.close();
+            conn.close();
         } catch(Exception e) {
            e.printStackTrace();
        }
@@ -313,28 +314,31 @@ public class MonitorFrame extends javax.swing.JFrame {
         ResultSet tables = null;
         ResultSet sizeof = null;
         ResultSet registros = null;
-        conn=Monitor.Enlace(conn);
+        String x ="";
+        String y="";
+        String z="";
         bw = new BufferedWriter(new FileWriter(archivo));
         tables = Monitor.allTables(tables, tablespace);
-        //ResultSetMetaData Res_md = tables.getMetaData();
-        int count = 1;
+        ResultSetMetaData Res_md = tables.getMetaData();
         while(tables.next()){
-            String x = tables.getObject(count).toString();
-            sizeof = Monitor.sizeOfTable(res, tables.getObject(count).toString());
-            registros = Monitor.countRegister(res, tables.getObject(count).toString());
-            //String y = sizeof.getObject(1).toString();
-            String w = registros.getObject(1).toString();
+            x = tables.getObject(1).toString();
+            sizeof = Monitor.sizeOfTable(res, x);
+            registros = Monitor.countRegister(res, x);
+            while(sizeof.next()){
+            y = sizeof.getObject(1).toString();
+            }
+            while(registros.next()){
+            z = registros.getString(1);
+            }
             //ResultSetMetaData Res_size = sizeof.getMetaData();
             //ResultSetMetaData Res_register = registros.getMetaData();
-            bw.write(tables.getObject(count).toString()+ "   " + sizeof.getObject(1).toString()+ "   " + registros.getObject(1).toString());
+            bw.write(x+ "   " + y+ "   " + z);
             bw.newLine();
-            count++;
         }
         bw.close();
         tables.close();
         sizeof.close();
         registros.close();
-        conn.close();
     
        } catch(Exception e) {
            e.printStackTrace();
