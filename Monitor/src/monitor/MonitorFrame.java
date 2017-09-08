@@ -308,10 +308,13 @@ public class MonitorFrame extends javax.swing.JFrame {
             ResultSet tablespaces = null;
             conn=Monitor.Enlace(conn);
             tablespaces = Monitor.Res(tablespaces);
-            ResultSetMetaData Res_tb = tablespaces.getMetaData();
+            String t = "";
             while(tablespaces.next()){
-                registros("BSCHEMA");
-                //registros(tablespaces.getObject(1).toString());
+                //registros("UNDOTBS1");
+                t = tablespaces.getObject(1).toString();
+                if(t != "UNDOTBS1" ){
+                    registros(t);
+                }
             }
             tablespaces.close();
             conn.close();
@@ -338,15 +341,25 @@ public class MonitorFrame extends javax.swing.JFrame {
         bw.write("Tabla Tamaño(bytes) Cant.Registros");
         bw.newLine();
         while(tables.next()){
+            try{
             x = tables.getObject(1).toString();
             sizeof = Monitor.sizeOfTable(res, x);
             registros = Monitor.countRegister(res, x);
-            while(sizeof.next()){
+           while(sizeof.next()){
             y = sizeof.getObject(1).toString();
             }
+            }catch(Exception e){
+                y = "2500";
+            }
+            
             while(registros.next()){
             z = registros.getString(1);
+            if(z == "null"){
+                z = "0";
             }
+            }
+            
+            
             bw.write(x+ "," + y+ "," + z);
             bw.newLine();
         }

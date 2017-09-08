@@ -12,10 +12,12 @@ package monitor;
 public class Table {
     String name;
     int size;
+    int registros;
 
-    public Table(String name, int size) {
+    public Table(String name, int size, int registros) {
         this.name = name;
         this.size = size;
+        this.registros = registros;
     }
 
     public Table() {
@@ -35,6 +37,14 @@ public class Table {
 
     public void setSize(int size) {
         this.size = size;
+    }
+    
+    public int getRegistros() {
+        return registros;
+    }
+
+    public void setRegistros(int registros) {
+        this.size = registros;
     }
     
     

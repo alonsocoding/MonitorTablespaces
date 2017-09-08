@@ -12,7 +12,7 @@ public class Monitor {
     static String bd = "XE";
     static String username = "bases";
     static String password = "bases";
-    static String url = "jdbc:oracle:thin:@LAPTOP-I8IV3KN9:1522:XE";
+    static String url = "jdbc:oracle:thin:@David-Chaves:1521:XE";
     
     public static Connection Enlace(Connection conn) throws SQLException {
         try {
@@ -62,7 +62,7 @@ public class Monitor {
     
     public static ResultSet sizeOfTable(ResultSet rs, String table) throws SQLException {
         st = Sta(st);
-        rs = st.executeQuery("select SUM(data_length) from dba_tab_columns where table_name = '"+ table +"'");
+        rs = st.executeQuery("select SUM(data_length) from all_tab_columns where table_name = '"+ table +"'");
         return rs;
     }
     
