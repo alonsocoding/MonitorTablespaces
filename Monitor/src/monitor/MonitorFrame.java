@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.sql.*;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -23,6 +24,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.CategoryItemLabelGenerator;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
+import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -206,7 +208,7 @@ public class MonitorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-
+        jPanel1.removeAll();
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         int selectedRow = jTable1.getSelectedRow();
@@ -243,7 +245,8 @@ public class MonitorFrame extends javax.swing.JFrame {
          renderer.setBaseItemLabelGenerator(lblGenerator);
          renderer.setBaseItemLabelsVisible(true);
          renderer.setBaseItemLabelPaint(Color.black);
-        
+         renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator("<html>{0} <br> Tablespace {1} <br> {2} ({3}) <br> Dias restantes : {2323} </html>", NumberFormat.getInstance()));
+
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
