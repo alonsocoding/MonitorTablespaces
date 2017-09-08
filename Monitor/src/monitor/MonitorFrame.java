@@ -310,7 +310,7 @@ public class MonitorFrame extends javax.swing.JFrame {
             while(tablespaces.next()){
                 //registros("UNDOTBS1");
                 t = tablespaces.getObject(1).toString();
-                if(t != "UNDOTBS1" ){
+                if(!t.contentEquals("UNDOTBS1") ){
                     registros(t);
                 }
             }
@@ -328,6 +328,8 @@ public class MonitorFrame extends javax.swing.JFrame {
 			FileReader f = new FileReader(archivo);
 			BufferedReader b = new BufferedReader(f);
 			b.readLine();
+                        List list = new ArrayList();
+                        List<Table> list1 = new ArrayList<Table>();
 				while((cadena = b.readLine())!=null) {
 					Table t1 = new Table();
 					
@@ -340,11 +342,8 @@ public class MonitorFrame extends javax.swing.JFrame {
 					t1.setName(name);
 					t1.setSize(Integer.parseInt(size));
 					t1.setRegistros(Integer.parseInt(registros));
-					
-					System.out.println("-----------------");
-					System.out.println("El nombre es: "+t1.getName());
-					System.out.println("El size es: "+t1.getSize());
-					System.out.println("El registro es: "+t1.getRegistros());
+                                        
+                                        
 				}
 			b.close();
 		} catch(Exception e) {

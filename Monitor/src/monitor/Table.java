@@ -44,7 +44,7 @@ public class Table {
     }
 
     public void setRegistros(int registros) {
-        this.size = registros;
+        this.registros = registros;
     }
     
     
