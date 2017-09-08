@@ -41,13 +41,12 @@ import org.jfree.ui.Layer;
  *
  * @author josealonso
  */
-public class MonitorFrame extends javax.swing.JFrame {
+public class Registros extends javax.swing.JFrame {
 
     // Lista para guardar tablespaces
     public List<Tablespace> tables = new ArrayList<Tablespace>();
     public static List<Table> table = new ArrayList<Table>();
     // Atributos para definir los tablespaces seleccionados
-    public static Registros view = new Registros();
 
     static Connection conn = null;
     static Statement sta = null;
@@ -57,7 +56,7 @@ public class MonitorFrame extends javax.swing.JFrame {
     /**
      * Creates new form MonitorFrame
      */
-    public MonitorFrame() {
+    public Registros() {
         initComponents();
         this.jTable1.setModel(modelo);
     }
@@ -75,13 +74,9 @@ public class MonitorFrame extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Monitor de los Tablespaces de Oracle");
+        setTitle("Registros");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -111,32 +106,6 @@ public class MonitorFrame extends javax.swing.JFrame {
             .addGap(0, 234, Short.MAX_VALUE)
         );
 
-        jButton2.setText("Guardar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jMenu1.setText("Menu");
-        jMenu1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu1ActionPerformed(evt);
-            }
-        });
-
-        jMenuItem1.setText("Registros");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem1);
-
-        jMenuBar1.add(jMenu1);
-
-        setJMenuBar(jMenuBar1);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -148,10 +117,9 @@ public class MonitorFrame extends javax.swing.JFrame {
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(41, 41, 41)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(180, 180, 180)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(0, 49, Short.MAX_VALUE))
@@ -159,10 +127,8 @@ public class MonitorFrame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-                    .addComponent(jButton1))
+                .addGap(14, 14, 14)
+                .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -215,70 +181,9 @@ public class MonitorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        jPanel1.removeAll();
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        int selectedRow = jTable1.getSelectedRow();
-
-        dataset.addValue((Number) modelo.getValueAt(selectedRow, 1), "Used Space", modelo.getValueAt(selectedRow, 0).toString());
-        dataset.addValue((Number) modelo.getValueAt(selectedRow, 2), "Free Space", modelo.getValueAt(selectedRow, 0).toString());
-
-        JFreeChart chart = ChartFactory.createStackedBarChart("Tablespaces", "Name", "Space", dataset, PlotOrientation.HORIZONTAL, true, true, false);
-        CategoryPlot p = chart.getCategoryPlot();
-        p.setRangeGridlinePaint(Color.black);
-        jPanel1.setLayout(new java.awt.BorderLayout());
-        ChartPanel CP = new ChartPanel(chart);
-        jPanel1.add(CP, BorderLayout.CENTER);
-        jPanel1.validate();
-
-        int value = Integer.parseInt(modelo.getValueAt(selectedRow, 5).toString());
-        int total = (Integer.parseInt(modelo.getValueAt(selectedRow, 3).toString()) * value) / 100;
-
-        Stroke stroke = new BasicStroke(2.0f);
-        ValueMarker marker = new ValueMarker(total);  // position is the value on the axis
-        marker.setPaint(Color.yellow);
-        marker.setStroke(stroke);
-
-        CategoryPlot plot1 = chart.getCategoryPlot();
-        plot1.addRangeMarker(marker, Layer.FOREGROUND);
-
-        // get renderer
-        StackedBarRenderer renderer = (StackedBarRenderer) chart.getCategoryPlot()
-                .getRenderer();
-
-        // set label appearance and position
-        CategoryItemLabelGenerator lblGenerator = new StandardCategoryItemLabelGenerator();
-        renderer.setBaseItemLabelGenerator(lblGenerator);
-        renderer.setBaseItemLabelsVisible(true);
-        renderer.setBaseItemLabelPaint(Color.black);
-        renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator("<html>{0} <br> Tablespace {1} <br> {2} ({3}) <br> Dias restantes : {2323} </html>", NumberFormat.getInstance()));
 
     }//GEN-LAST:event_jTable1MouseClicked
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try {
-            String ruta = "./archivo.txt";
-            File archivo = new File(ruta);
-            BufferedWriter bw;
-            bw = new BufferedWriter(new FileWriter(archivo));
-            for (int i = 0; i < modelo.getRowCount(); i++) {
-                bw.write(modelo.getValueAt(i, 5).toString());
-                bw.newLine();
-            }
-            bw.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-        view.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
-    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
-
-    }//GEN-LAST:event_jMenu1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -298,29 +203,23 @@ public class MonitorFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MonitorFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MonitorFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MonitorFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MonitorFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MonitorFrame().setVisible(true);
+                new Registros().setVisible(true);
             }
         });
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-                guardarRegistros();
-                System.out.format("Termine...");
-            }
-        });
-        t.start();
 
     }
 
@@ -371,18 +270,6 @@ public class MonitorFrame extends javax.swing.JFrame {
             System.out.println("Error al leer...");
         }
     }
-    public void method() {
-		ArrayList<ArrayList<Table>> matriz = new ArrayList<ArrayList<Table>>();
-		ArrayList<Table> tablas = new ArrayList<Table>();
-		for(int i=0; i<10; i++) { tablas.add(new Table("t1",12,23)); }
-		for(int i=0; i<10; i++) { matriz.add(tablas); }
-		int suma = 0;
-		for(int i=0; i<10; i++) { 
-			for(int j=0; j<10; j++) {
-				suma += matriz.get(i).get(j).getRegistros(); 
-			}
-		}
-	}
 
     public static void registros(String tablespace) {
         try {
@@ -435,14 +322,9 @@ public class MonitorFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
-
 
 }

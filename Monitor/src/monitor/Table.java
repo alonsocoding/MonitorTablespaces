@@ -10,6 +10,7 @@ package monitor;
  * @author AndreyCh
  */
 public class Table {
+
     String name;
     int size;
     int registros;
@@ -38,7 +39,7 @@ public class Table {
     public void setSize(int size) {
         this.size = size;
     }
-    
+
     public int getRegistros() {
         return registros;
     }
@@ -46,6 +47,9 @@ public class Table {
     public void setRegistros(int registros) {
         this.registros = registros;
     }
-    
-    
+
+    Object get(int j) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
