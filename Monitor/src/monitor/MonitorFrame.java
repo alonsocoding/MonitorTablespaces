@@ -18,6 +18,7 @@ import java.sql.*;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -47,11 +48,6 @@ public class MonitorFrame extends javax.swing.JFrame {
     public List<Tablespace> tables = new ArrayList<Tablespace>();
     public static List<Table> table = new ArrayList<Table>();
     // Atributos para definir los tablespaces seleccionados
-    public boolean System = false;
-    public boolean Undo = false;
-    public boolean Temp = false;
-    public boolean User = false;
-    public boolean Index = false;
     
     static Connection conn=null;
     static Statement sta=null;
@@ -199,7 +195,6 @@ public class MonitorFrame extends javax.swing.JFrame {
            res.close();
            conn.close();
            
-           
        } catch(Exception e) {
            e.printStackTrace();
        }
@@ -326,6 +321,36 @@ public class MonitorFrame extends javax.swing.JFrame {
        }
     
     }
+    
+    public void reading(String archivo) {
+		try {
+			String cadena;
+			FileReader f = new FileReader(archivo);
+			BufferedReader b = new BufferedReader(f);
+			b.readLine();
+				while((cadena = b.readLine())!=null) {
+					Table t1 = new Table();
+					
+					StringTokenizer tokens = new StringTokenizer(cadena, ","); 
+					
+					String name = tokens.nextToken().trim(); 
+					String size = tokens.nextToken().trim(); 
+					String registros = tokens.nextToken().trim();
+					
+					t1.setName(name);
+					t1.setSize(Integer.parseInt(size));
+					t1.setRegistros(Integer.parseInt(registros));
+					
+					System.out.println("-----------------");
+					System.out.println("El nombre es: "+t1.getName());
+					System.out.println("El size es: "+t1.getSize());
+					System.out.println("El registro es: "+t1.getRegistros());
+				}
+			b.close();
+		} catch(Exception e) {
+			System.out.println("Error al leer...");
+		}
+	}
     
     public static void registros(String tablespace){
         try {
