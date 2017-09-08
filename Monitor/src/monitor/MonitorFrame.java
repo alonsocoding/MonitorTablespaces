@@ -323,6 +323,7 @@ public class MonitorFrame extends javax.swing.JFrame {
         t.start();
 
     }
+    static int countRow = 4;
 
     public static void guardarRegistros() {
         try {
@@ -331,11 +332,12 @@ public class MonitorFrame extends javax.swing.JFrame {
             tablespaces = Monitor.Res(tablespaces);
             String t = "";
             while (tablespaces.next()) {
-                //registros("USERS");
+                //registros("SYSTEM");                           
                 t = tablespaces.getObject(1).toString();
                 if (!t.contentEquals("UNDOTBS1")) {
                     registros(t);
-                }
+                    creaMatriz(t);
+                }              
             }
             tablespaces.close();
             conn.close();
@@ -344,14 +346,61 @@ public class MonitorFrame extends javax.swing.JFrame {
         }
 
     }
+    
+    public static void creaMatriz(String tablespace){
+        try{
+            conn = Monitor.Enlace(conn);
+            ResultSet count = null;
+            count = Monitor.countTables(count, tablespace);
+            int x = 0;
+            if(tablespace != "SYSTEM" || tablespace != "SYSAUX"){
+            while(count.next()){              
+            x = Integer.valueOf(count.getObject(1).toString());
+            }
+            }
+            reading("./" + tablespace + ".txt",x);
+            count.close();
+            conn.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    static Matriz system;
+    static Matriz sysaux;
+    static Matriz users;
+    static Matriz bschema;
+    
 
-    public void reading(String archivo) {
+    public static void reading(String archivo, int columns) {
         try {
             String cadena;
             FileReader f = new FileReader(archivo);
             BufferedReader b = new BufferedReader(f);
-            List list = new ArrayList();
-            List<Table> list1 = new ArrayList<Table>();
+            boolean bandera;
+            Matriz mat = new Matriz();
+            switch(archivo){
+                case "./SYSTEM.txt":{
+                    system = new Matriz(countRow,629);
+                    mat = system;
+                    break;
+                }
+                case "./SYSAUX.txt":{
+                    sysaux = new Matriz(countRow,876);
+                    mat = sysaux;
+                    break;
+                }
+                case "./USERS.txt":{
+                    users = new Matriz(countRow,columns);
+                    mat = users;
+                    break;
+                }
+                case "./BSCHEMA.txt":{
+                    bschema = new Matriz(countRow,columns);
+                    mat = bschema;
+                    break;
+                }                   
+            }
             while ((cadena = b.readLine()) != null) {
                 Table t1 = new Table();
 
@@ -360,21 +409,83 @@ public class MonitorFrame extends javax.swing.JFrame {
                 String name = tokens.nextToken().trim();
                 String size = tokens.nextToken().trim();
                 String registros = tokens.nextToken().trim();
+                
+                if(registros == "null"){
+                    registros = "0";
+                }
 
                 t1.setName(name);
                 t1.setSize(Integer.parseInt(size));
+                try{
                 t1.setRegistros(Integer.parseInt(registros));
-
+                }catch(Exception e){
+                t1.setRegistros(0);
+                }
+                bandera = false;
+                for (int i = 0; i < countRow; i++){
+                    if(bandera == true){
+                        break;
+                    }
+                for (int j = 0; j < columns; j++){
+                    if(mat.getPosicion(i, j).getName() == t1.getName()){
+                        mat.agregarTabla(t1, i+1, j);
+                        bandera = true;
+                        break;
+                    }else{
+                        if(mat.getPosicion(i, j).getName() == ""){
+                        mat.agregarTabla(t1, i, j);
+                        bandera = true;
+                        break;
+                       }
+                    }
+                }
+                }
+            }
+            switch(archivo){
+                case "./SYSTEM.txt":{
+                    system = mat;
+                    break;
+                }
+                case "./SYSAUX.txt":{
+                    sysaux = mat;
+                    break;
+                }
+                case "./USERS.txt":{
+                    users = mat;
+                    break;
+                }
+                case "./BSCHEMA.txt":{
+                    bschema = mat;
+                    break;
+                }                   
             }
             b.close();
+           // //System.out.println(system.toString());
+            
         } catch (Exception e) {
-            System.out.println("Error al leer...");
+            e.printStackTrace();
         }
     }
-    public void method() {
+    
+    /*public static void Prueba(){
+        boolean bandera = true;
+        String t = "REGIONS";
+        for (int i = 0; i < 4; i++)
+            {
+                if(mat.getPosicion(i, 0).getName() != "")
+                    if(t != mat.getPosicion(i, 0).getName()){
+                        bandera = false;
+                    }
+            }
+        if(bandera){
+            System.out.println("EXITO!! .... .l. .l. .l.");
+        }
+    }*/
+    
+   /* public void method() {
 		ArrayList<ArrayList<Table>> matriz = new ArrayList<ArrayList<Table>>();
 		ArrayList<Table> tablas = new ArrayList<Table>();
-		for(int i=0; i<10; i++) { tablas.add(new Table("t1",12,23)); }
+		for(int i=0; i<10; i++) { tablas.add(new Table());}
 		for(int i=0; i<10; i++) { matriz.add(tablas); }
 		int suma = 0;
 		for(int i=0; i<10; i++) { 
@@ -382,7 +493,7 @@ public class MonitorFrame extends javax.swing.JFrame {
 				suma += matriz.get(i).get(j).getRegistros(); 
 			}
 		}
-	}
+	}*/
 
     public static void registros(String tablespace) {
         try {
@@ -409,12 +520,15 @@ public class MonitorFrame extends javax.swing.JFrame {
                 } catch (Exception e) {
                     y = "2500";
                 }
-
+                try{
                 while (registros.next()) {
                     z = registros.getString(1);
                     if (z == "null") {
                         z = "0";
                     }
+                }
+                }catch(Exception e){
+                    z = "0";
                 }
 
                 bw.write(x + "," + y + "," + z);

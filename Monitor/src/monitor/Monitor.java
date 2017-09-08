@@ -13,7 +13,7 @@ public class Monitor {
     static String bd = "XE";
     static String username = "bases";
     static String password = "bases";
-    static String url = "jdbc:oracle:thin:@LAPTOP-I8IV3KN9:1522:XE";
+    static String url = "jdbc:oracle:thin:@David-Chaves:1521:XE";
 
     public static Connection Enlace(Connection conn) throws SQLException {
         try {
@@ -73,6 +73,12 @@ public class Monitor {
         st = Sta(st);
         rs = st.executeQuery("select num_rows FROM dba_tables where table_name = '" + table + "'");
         //exec dbms_stats.gather_schema_stats('system'); hacer lo mismo con el owner deseado
+        return rs;
+    }
+    
+    public static ResultSet countTables(ResultSet rs, String tablespace) throws SQLException {
+        st = Sta(st);
+        rs = st.executeQuery("select count(*) from dba_tables where tablespace_name='" + tablespace + "'");
         return rs;
     }
 

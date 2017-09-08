@@ -22,6 +22,9 @@ public class Table {
     }
 
     public Table() {
+        this.name = "";
+        this.size = 0;
+        this.registros = 0;
     }
 
     public String getName() {
