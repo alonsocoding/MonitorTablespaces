@@ -96,17 +96,26 @@ public class Matriz {
    ArrayList transacciones = new ArrayList();
        double suma = 0;
        ArrayList promedios = promedio();
-       double diferencia = 0;
+       double acumulado = 0;
        for (int i = 0; i < columnas; i++){
             for (int j = 0; j < filas; j++){
-//                    suma = (mat.get(i).get(j).getSize()) * (promedios.get(i));
-                    suma += diferencia;
-                
+                    String x = promedios.get(i).toString();
+                    suma = (mat.get(i).get(j).getSize()) * (Double.parseDouble(x)) + (mat.get(i).get(j).getSize()) * (Double.parseDouble(x)) * 0.3;
+                    acumulado += suma;              
             }
-            transacciones.add(suma/filas);
-            suma = 0;
+            transacciones.add(acumulado);
+            acumulado = 0;
         }
-        return promedios;
+        return transacciones;
    }
-
+   
+   public double transTableSpace(){
+       double suma = 0;
+       ArrayList diarias = diarias();
+       for (int i = 0; i < diarias.size(); i++){
+           String x = diarias.get(i).toString();
+           suma += Double.parseDouble(x);
+       }
+       return suma;
+   }
 }
