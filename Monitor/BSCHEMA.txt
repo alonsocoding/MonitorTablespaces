@@ -1,3 +1,2 @@
-Tabla Tamaño(bytes) Cant.Registros
 T1,66,3
 T2,166,0

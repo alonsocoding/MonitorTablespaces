@@ -299,6 +299,12 @@ public class MonitorFrame extends javax.swing.JFrame {
                new MonitorFrame().setVisible(true);
             }
         });
+        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() { 
+               guardarRegistros();
+            }
+        });
     }
     
     public static void guardarRegistros(){
@@ -308,7 +314,7 @@ public class MonitorFrame extends javax.swing.JFrame {
             tablespaces = Monitor.Res(tablespaces);
             String t = "";
             while(tablespaces.next()){
-                //registros("UNDOTBS1");
+                //registros("USERS");
                 t = tablespaces.getObject(1).toString();
                 if(!t.contentEquals("UNDOTBS1") ){
                     registros(t);
@@ -327,7 +333,6 @@ public class MonitorFrame extends javax.swing.JFrame {
 			String cadena;
 			FileReader f = new FileReader(archivo);
 			BufferedReader b = new BufferedReader(f);
-			b.readLine();
                         List list = new ArrayList();
                         List<Table> list1 = new ArrayList<Table>();
 				while((cadena = b.readLine())!=null) {
@@ -363,10 +368,8 @@ public class MonitorFrame extends javax.swing.JFrame {
         String x ="";
         String y="";
         String z="";
-        bw = new BufferedWriter(new FileWriter(archivo));
+        bw = new BufferedWriter(new FileWriter(archivo, true));
         tables = Monitor.allTables(tables, tablespace);
-        bw.write("Tabla Tamaño(bytes) Cant.Registros");
-        bw.newLine();
         while(tables.next()){
             try{
             x = tables.getObject(1).toString();

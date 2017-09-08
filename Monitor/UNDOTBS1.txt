@@ -1,1 +1,1 @@
-Tabla Tamaño(bytes) Cant.Registros
+﻿
