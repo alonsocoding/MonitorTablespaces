@@ -14,17 +14,20 @@ public class Table {
     String name;
     int size;
     int registros;
+    int index;
 
-    public Table(String name, int size, int registros) {
+    public Table(String name, int size, int registros, int index) {
         this.name = name;
         this.size = size;
         this.registros = registros;
+        this.index = index;
     }
 
     public Table() {
         this.name = "";
         this.size = 0;
         this.registros = 0;
+        this.index = 0;
     }
 
     public String getName() {
@@ -49,6 +52,14 @@ public class Table {
 
     public void setRegistros(int registros) {
         this.registros = registros;
+    }
+    
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     Object get(int j) {

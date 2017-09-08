@@ -219,6 +219,7 @@ public class MonitorFrame extends javax.swing.JFrame {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         int selectedRow = jTable1.getSelectedRow();
+        double x = users.transTableSpace();
 
         dataset.addValue((Number) modelo.getValueAt(selectedRow, 1), "Used Space", modelo.getValueAt(selectedRow, 0).toString());
         dataset.addValue((Number) modelo.getValueAt(selectedRow, 2), "Free Space", modelo.getValueAt(selectedRow, 0).toString());
@@ -331,14 +332,14 @@ public class MonitorFrame extends javax.swing.JFrame {
             conn = Monitor.Enlace(conn);
             tablespaces = Monitor.Res(tablespaces);
             String t = "";
-            while (tablespaces.next()) {
-                //registros("SYSTEM");                           
-                t = tablespaces.getObject(1).toString();
-                if (!t.contentEquals("UNDOTBS1")) {
-                    registros(t);
-                    creaMatriz(t);
-                }              
-            }
+            //while (tablespaces.next()) {
+                registros("USERS");                           
+              //  t = tablespaces.getObject(1).toString();
+               // if (!t.contentEquals("UNDOTBS1")) {
+                //    registros(t);
+                    creaMatriz("USERS");
+                //}              
+ //           }
             tablespaces.close();
             conn.close();
         } catch (Exception e) {
@@ -409,6 +410,7 @@ public class MonitorFrame extends javax.swing.JFrame {
                 String name = tokens.nextToken().trim();
                 String size = tokens.nextToken().trim();
                 String registros = tokens.nextToken().trim();
+                String index = tokens.nextToken().trim();
                 
                 if(registros == "null"){
                     registros = "0";
@@ -419,7 +421,13 @@ public class MonitorFrame extends javax.swing.JFrame {
                 try{
                 t1.setRegistros(Integer.parseInt(registros));
                 }catch(Exception e){
-                t1.setRegistros(0);
+                    t1.setRegistros(0);
+                }  
+                
+                try{
+                t1.setIndex(Integer.parseInt(registros));
+                }catch(Exception e1){
+                    t1.setIndex(0);
                 }
                 bandera = false;
                 for (int i = 0; i < countRow; i++){
@@ -460,7 +468,7 @@ public class MonitorFrame extends javax.swing.JFrame {
                 }                   
             }
             b.close();
-           // //System.out.println(system.toString());
+            //System.out.println(system.toString());
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -504,9 +512,11 @@ public class MonitorFrame extends javax.swing.JFrame {
             ResultSet tables = null;
             ResultSet sizeof = null;
             ResultSet registros = null;
+            ResultSet index = null;
             String x = "";
             String y = "";
             String z = "";
+            String w = "";
             bw = new BufferedWriter(new FileWriter(archivo, true));
             tables = Monitor.allTables(tables, tablespace);
             while (tables.next()) {
@@ -514,6 +524,7 @@ public class MonitorFrame extends javax.swing.JFrame {
                     x = tables.getObject(1).toString();
                     sizeof = Monitor.sizeOfTable(res, x);
                     registros = Monitor.countRegister(res, x);
+                    index = Monitor.sizeIndex(res, x);
                     while (sizeof.next()) {
                         y = sizeof.getObject(1).toString();
                     }
@@ -530,8 +541,19 @@ public class MonitorFrame extends javax.swing.JFrame {
                 }catch(Exception e){
                     z = "0";
                 }
-
-                bw.write(x + "," + y + "," + z);
+                
+                try{
+                while (index.next()) {
+                    w = index.getString(1);
+                    if (w == "null") {
+                        w = "0";
+                    }
+                }
+                }catch(Exception e){
+                    w = "0";
+                }
+                Integer numero= Integer.parseInt(z) + (int)(Math.random() * 500) + 1;               
+                bw.write(x + "," + y + "," +  numero.toString() + "," + w);
                 bw.newLine();
             }
             bw.close();

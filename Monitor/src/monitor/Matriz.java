@@ -77,12 +77,11 @@ public class Matriz {
    public ArrayList promedio(){
        ArrayList<Double> promedios = new ArrayList();
        double suma = 0;
-       double promedio = 0;
        double diferencia = 0;
        for (int i = 0; i < columnas; i++){
             for (int j = 0; j < filas; j++){
                 if(j+1 < filas){
-                    diferencia = mat.get(i).get(j+1).getRegistros() - mat.get(i).get(j).getRegistros();
+                    diferencia = mat.get(j+1).get(i).getRegistros() - mat.get(j).get(i).getRegistros();
                     suma += diferencia;
                 }
             }
@@ -100,7 +99,7 @@ public class Matriz {
        for (int i = 0; i < columnas; i++){
             for (int j = 0; j < filas; j++){
                     String x = promedios.get(i).toString();
-                    suma = (mat.get(i).get(j).getSize()) * (Double.parseDouble(x)) + (mat.get(i).get(j).getSize()) * (Double.parseDouble(x)) * 0.3;
+                    suma = (mat.get(j).get(i).getSize()) * (Double.parseDouble(x)) + (mat.get(j).get(i).getIndex()) * (Double.parseDouble(x)) * 0.3;
                     acumulado += suma;              
             }
             transacciones.add(acumulado);

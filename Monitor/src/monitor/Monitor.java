@@ -81,5 +81,11 @@ public class Monitor {
         rs = st.executeQuery("select count(*) from dba_tables where tablespace_name='" + tablespace + "'");
         return rs;
     }
+    
+    public static ResultSet sizeIndex(ResultSet rs, String table) throws SQLException {
+        st = Sta(st);
+        rs = st.executeQuery("select SUM(column_length) from all_ind_columns where table_name = '"+ table+ "'");
+        return rs;
+    }
 
 }
