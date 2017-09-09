@@ -47,8 +47,8 @@ public class MonitorFrame extends javax.swing.JFrame {
     public List<Tablespace> tables = new ArrayList<Tablespace>();
     public static List<Table> table = new ArrayList<Table>();
     // Atributos para definir los tablespaces seleccionados
-    public static Registros view = new Registros();
-
+    //public Registros view = new Registros();
+    public static Registros view;
     static Connection conn = null;
     static Statement sta = null;
     static ResultSet res = null;
@@ -83,6 +83,14 @@ public class MonitorFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Monitor de los Tablespaces de Oracle");
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -313,6 +321,7 @@ public class MonitorFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MonitorFrame().setVisible(true);
+                view = new Registros();
             }
         });
         Thread t = new Thread(new Runnable() {

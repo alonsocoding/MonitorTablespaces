@@ -20,6 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import javax.swing.table.DefaultTableModel;
+import static monitor.MonitorFrame.conn;
+import static monitor.MonitorFrame.countRow;
+import static monitor.MonitorFrame.guardarRegistros;
+import static monitor.MonitorFrame.reading;
+import static monitor.MonitorFrame.system;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -46,6 +51,7 @@ public class Registros extends javax.swing.JFrame {
     // Lista para guardar tablespaces
     public List<Tablespace> tables = new ArrayList<Tablespace>();
     public static List<Table> table = new ArrayList<Table>();
+    static ArrayList<ArrayList<Table>> matriz;
     // Atributos para definir los tablespaces seleccionados
 
     static Connection conn = null;
@@ -58,7 +64,7 @@ public class Registros extends javax.swing.JFrame {
      */
     public Registros() {
         initComponents();
-        this.jTable1.setModel(modelo);
+        this.jTable2.setModel(modelo);
     }
 
     /**
@@ -70,120 +76,89 @@ public class Registros extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
 
-        setTitle("Registros");
+        setTitle("Registro de Transacciones");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        jLabel1.setText("Seleccione el Tablespace para leer el historial diario de transaciones:");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "USERS" }));
+        jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                jComboBox1MouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-
-        jButton1.setText("Select");
-        jButton1.setToolTipText("");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jComboBox1ActionPerformed(evt);
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 463, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 234, Short.MAX_VALUE)
-        );
+            }
+        ));
+        jScrollPane2.setViewportView(jTable2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(180, 180, 180)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 49, Short.MAX_VALUE))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+                        .addGap(27, 27, 27))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jButton1)
+                .addGap(38, 38, 38)
+                .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            // Lectura de Archivo para columna HWM
-            String texto = "";
-            FileReader lector = new FileReader("./archivo.txt");
-            BufferedReader contenido = new BufferedReader(lector);
-            // Conexion con base y lanza sql
-            conn = Monitor.Enlace(conn);
-            res = Monitor.TableRes(res);
-            // Obtiene la cantidad de columnas
-            ResultSetMetaData Res_md = res.getMetaData();
-            int cantidad_columnas = Res_md.getColumnCount();
-            // Agrega las columnas necesarias
-            for (int i = 1; i <= cantidad_columnas; i++) {
-                modelo.addColumn(Res_md.getColumnLabel(i));
-            }
-            // Agrega una extra para HWM
-            modelo.addColumn("HWM");
-            // Ingresa a la tabla las filas 
-            while (res.next()) {
-                Object[] fila = new Object[cantidad_columnas + 1];
-                for (int i = 0; i < cantidad_columnas + 1; i++) {
-                    if (i == cantidad_columnas) { // Si llega al final esta en HWM
-                        texto = contenido.readLine(); // Lee archivo
-                        fila[i] = texto; // Ingresa valor
-                    } else { // Si no sigue en las otras columnas
-                        fila[i] = res.getObject(i + 1); // Ingresa valor desde SQL
-                    }
-                }
-                modelo.addRow(fila); // Ingresa la fila al table model
-            }
-            res.close();
-            conn.close();
+    private void jComboBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseClicked
 
-        } catch (Exception e) {
-            e.printStackTrace();
+//        Object selected = jComboBox1.getSelectedItem();
+//        if (selected.toString().equals("USERS")) {
+//            llenaMatriz();
+//        }
+    }//GEN-LAST:event_jComboBox1MouseClicked
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+        Object selected = jComboBox1.getSelectedItem();
+        if (selected.toString().equals("USERS")) {
+            llenaMatriz();
         }
-
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-
-
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -220,37 +195,94 @@ public class Registros extends javax.swing.JFrame {
                 new Registros().setVisible(true);
             }
         });
+         Thread t = new Thread(new Runnable() {
+            public void run() {
+                Tablespaces();
+                System.out.format("Terminado...");
+            }
+        });
+        t.start();
 
     }
 
-    public static void guardarRegistros() {
+    public static void Tablespaces() {
         try {
             ResultSet tablespaces = null;
             conn = Monitor.Enlace(conn);
             tablespaces = Monitor.Res(tablespaces);
-            String t = "";
+            String name = "";
             while (tablespaces.next()) {
-                //registros("USERS");
-                t = tablespaces.getObject(1).toString();
-                if (!t.contentEquals("UNDOTBS1")) {
-                    registros(t);
+                name = tablespaces.getObject(1).toString();
+                jComboBox1.addItem(name);
+            }
+            conn.close();
+            tablespaces.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void creaMatriz(String tablespace) {
+        try {
+            conn = Monitor.Enlace(conn);
+            ResultSet count = null;
+            count = Monitor.countTables(count, tablespace);
+            int x = 0;
+            if (tablespace != "SYSTEM" || tablespace != "SYSAUX") {
+                while (count.next()) {
+                    x = Integer.valueOf(count.getObject(1).toString());
                 }
             }
-            tablespaces.close();
+            reading("./" + tablespace + ".txt", x);
+            count.close();
             conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+    }
+    public void llenaMatriz(){
+            creaMatriz("USERS");
+            modelo.addColumn("Nombre de la tabla");
+            modelo.addColumn("Tamaño (bytes)");
+            modelo.addColumn("Cantidad de registros");
+            modelo.addColumn("Tamaño indices (bytes)");
+            Object[] tablas = new Object[users.getNumeroColumnas() + 1];
+            Table t1 = new Table();
+            for (int i = 0; i < users.getNumeroFilas(); i++) {
+                for (int j = 0; j < users.getNumeroColumnas(); j++) {
+                            t1 = users.getMat().get(i).get(j);
+                            tablas[0] = t1.getName();
+                            tablas[1] = t1.getSize();
+                            tablas[2] = t1.getRegistros();
+                            tablas[3] = t1.getIndex();
+                            modelo.addRow(tablas);
+                }
+            }
     }
 
-    public void reading(String archivo) {
+    static Matriz users;
+    static Matriz bschema;
+    static int countRow = 4;
+
+    public static void reading(String archivo, int columns) {
         try {
             String cadena;
             FileReader f = new FileReader(archivo);
             BufferedReader b = new BufferedReader(f);
-            List list = new ArrayList();
-            List<Table> list1 = new ArrayList<Table>();
+            boolean bandera;
+            Matriz mat = new Matriz();
+            switch (archivo) {
+                case "./USERS.txt": {
+                    users = new Matriz(countRow, columns);
+                    mat = users;
+                    break;
+                }
+                case "./BSCHEMA.txt": {
+                    bschema = new Matriz(countRow, columns);
+                    mat = bschema;
+                    break;
+                }
+            }
             while ((cadena = b.readLine()) != null) {
                 Table t1 = new Table();
 
@@ -259,72 +291,67 @@ public class Registros extends javax.swing.JFrame {
                 String name = tokens.nextToken().trim();
                 String size = tokens.nextToken().trim();
                 String registros = tokens.nextToken().trim();
+                String index = tokens.nextToken().trim();
+
+                if (registros == "null") {
+                    registros = "0";
+                }
 
                 t1.setName(name);
                 t1.setSize(Integer.parseInt(size));
-                t1.setRegistros(Integer.parseInt(registros));
+                try {
+                    t1.setRegistros(Integer.parseInt(registros));
+                } catch (Exception e) {
+                    t1.setRegistros(0);
+                }
 
+                try {
+                    t1.setIndex(Integer.parseInt(registros));
+                } catch (Exception e1) {
+                    t1.setIndex(0);
+                }
+                bandera = false;
+                for (int i = 0; i < countRow; i++) {
+                    if (bandera == true) {
+                        break;
+                    }
+                    for (int j = 0; j < columns; j++) {
+                        if (mat.getPosicion(i, j).getName() == t1.getName()) {
+                            mat.agregarTabla(t1, i + 1, j);
+                            bandera = true;
+                            break;
+                        } else {
+                            if (mat.getPosicion(i, j).getName() == "") {
+                                mat.agregarTabla(t1, i, j);
+                                bandera = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            switch (archivo) {
+                case "./USERS.txt": {
+                    users = mat;
+                    break;
+                }
+                case "./BSCHEMA.txt": {
+                    bschema = mat;
+                    break;
+                }
             }
             b.close();
-        } catch (Exception e) {
-            System.out.println("Error al leer...");
-        }
-    }
-
-    public static void registros(String tablespace) {
-        try {
-            String ruta = "./" + tablespace + ".txt";
-            File archivo = new File(ruta);
-            BufferedWriter bw;
-            conn = Monitor.Enlace(conn);
-            ResultSet tables = null;
-            ResultSet sizeof = null;
-            ResultSet registros = null;
-            String x = "";
-            String y = "";
-            String z = "";
-            bw = new BufferedWriter(new FileWriter(archivo, true));
-            tables = Monitor.allTables(tables, tablespace);
-            while (tables.next()) {
-                try {
-                    x = tables.getObject(1).toString();
-                    sizeof = Monitor.sizeOfTable(res, x);
-                    registros = Monitor.countRegister(res, x);
-                    while (sizeof.next()) {
-                        y = sizeof.getObject(1).toString();
-                    }
-                } catch (Exception e) {
-                    y = "2500";
-                }
-
-                while (registros.next()) {
-                    z = registros.getString(1);
-                    if (z == "null") {
-                        z = "0";
-                    }
-                }
-
-                bw.write(x + "," + y + "," + z);
-                bw.newLine();
-            }
-            bw.close();
-            tables.close();
-            sizeof.close();
-            registros.close();
-            conn.close();
+            //System.out.println(system.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    public static javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable2;
     // End of variables declaration//GEN-END:variables
 
 }
