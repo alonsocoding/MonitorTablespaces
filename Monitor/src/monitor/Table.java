@@ -53,7 +53,7 @@ public class Table {
     public void setRegistros(int registros) {
         this.registros = registros;
     }
-    
+
     public int getIndex() {
         return index;
     }

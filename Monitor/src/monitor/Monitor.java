@@ -75,16 +75,16 @@ public class Monitor {
         //exec dbms_stats.gather_schema_stats('system'); hacer lo mismo con el owner deseado
         return rs;
     }
-    
+
     public static ResultSet countTables(ResultSet rs, String tablespace) throws SQLException {
         st = Sta(st);
         rs = st.executeQuery("select count(*) from dba_tables where tablespace_name='" + tablespace + "'");
         return rs;
     }
-    
+
     public static ResultSet sizeIndex(ResultSet rs, String table) throws SQLException {
         st = Sta(st);
-        rs = st.executeQuery("select SUM(column_length) from all_ind_columns where table_name = '"+ table+ "'");
+        rs = st.executeQuery("select SUM(column_length) from all_ind_columns where table_name = '" + table + "'");
         return rs;
     }
 

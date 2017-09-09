@@ -85,7 +85,7 @@ public class Registros extends javax.swing.JFrame {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
-        jLabel1.setText("Seleccione el Tablespace para leer el historial diario de transaciones:");
+        jLabel1.setText("Seleccione el Tablespace para leer el historial de transaciones:");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "USERS" }));
         jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -132,12 +132,12 @@ public class Registros extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -146,10 +146,6 @@ public class Registros extends javax.swing.JFrame {
 
     private void jComboBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseClicked
 
-//        Object selected = jComboBox1.getSelectedItem();
-//        if (selected.toString().equals("USERS")) {
-//            llenaMatriz();
-//        }
     }//GEN-LAST:event_jComboBox1MouseClicked
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -195,31 +191,6 @@ public class Registros extends javax.swing.JFrame {
                 new Registros().setVisible(true);
             }
         });
-         Thread t = new Thread(new Runnable() {
-            public void run() {
-                Tablespaces();
-                System.out.format("Terminado...");
-            }
-        });
-        t.start();
-
-    }
-
-    public static void Tablespaces() {
-        try {
-            ResultSet tablespaces = null;
-            conn = Monitor.Enlace(conn);
-            tablespaces = Monitor.Res(tablespaces);
-            String name = "";
-            while (tablespaces.next()) {
-                name = tablespaces.getObject(1).toString();
-                jComboBox1.addItem(name);
-            }
-            conn.close();
-            tablespaces.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void creaMatriz(String tablespace) {
@@ -240,24 +211,25 @@ public class Registros extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-    public void llenaMatriz(){
-            creaMatriz("USERS");
-            modelo.addColumn("Nombre de la tabla");
-            modelo.addColumn("Tamaño (bytes)");
-            modelo.addColumn("Cantidad de registros");
-            modelo.addColumn("Tamaño indices (bytes)");
-            Object[] tablas = new Object[users.getNumeroColumnas() + 1];
-            Table t1 = new Table();
-            for (int i = 0; i < users.getNumeroFilas(); i++) {
-                for (int j = 0; j < users.getNumeroColumnas(); j++) {
-                            t1 = users.getMat().get(i).get(j);
-                            tablas[0] = t1.getName();
-                            tablas[1] = t1.getSize();
-                            tablas[2] = t1.getRegistros();
-                            tablas[3] = t1.getIndex();
-                            modelo.addRow(tablas);
-                }
+
+    public void llenaMatriz() {
+        creaMatriz("USERS");
+        modelo.addColumn("Nombre de la tabla");
+        modelo.addColumn("Tamaño (bytes)");
+        modelo.addColumn("Cantidad de registros");
+        modelo.addColumn("Tamaño indices (bytes)");
+        Object[] tablas = new Object[users.getNumeroColumnas() + 1];
+        Table t1 = new Table();
+        for (int i = 0; i < users.getNumeroFilas(); i++) {
+            for (int j = 0; j < users.getNumeroColumnas(); j++) {
+                t1 = users.getMat().get(i).get(j);
+                tablas[0] = t1.getName();
+                tablas[1] = t1.getSize();
+                tablas[2] = t1.getRegistros();
+                tablas[3] = t1.getIndex();
+                modelo.addRow(tablas);
             }
+        }
     }
 
     static Matriz users;

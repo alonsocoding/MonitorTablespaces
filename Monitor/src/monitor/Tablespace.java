@@ -10,6 +10,7 @@ package monitor;
  * @author JoseManuel
  */
 public class Tablespace {
+
     String name;
     int free_space;
     int total_space;
@@ -66,5 +67,5 @@ public class Tablespace {
     public void setHwm(float hwm) {
         this.hwm = hwm;
     }
-    
+
 }

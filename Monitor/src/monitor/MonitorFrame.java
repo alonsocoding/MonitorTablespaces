@@ -342,13 +342,13 @@ public class MonitorFrame extends javax.swing.JFrame {
             tablespaces = Monitor.Res(tablespaces);
             String t = "";
             //while (tablespaces.next()) {
-                registros("USERS");                           
-              //  t = tablespaces.getObject(1).toString();
-               // if (!t.contentEquals("UNDOTBS1")) {
-                //    registros(t);
-                    creaMatriz("USERS");
-                //}              
- //           }
+            registros("USERS");
+            //  t = tablespaces.getObject(1).toString();
+            // if (!t.contentEquals("UNDOTBS1")) {
+            //    registros(t);
+            creaMatriz("USERS");
+            //}              
+            //           }
             tablespaces.close();
             conn.close();
         } catch (Exception e) {
@@ -356,31 +356,30 @@ public class MonitorFrame extends javax.swing.JFrame {
         }
 
     }
-    
-    public static void creaMatriz(String tablespace){
-        try{
+
+    public static void creaMatriz(String tablespace) {
+        try {
             conn = Monitor.Enlace(conn);
             ResultSet count = null;
             count = Monitor.countTables(count, tablespace);
             int x = 0;
-            if(tablespace != "SYSTEM" || tablespace != "SYSAUX"){
-            while(count.next()){              
-            x = Integer.valueOf(count.getObject(1).toString());
+            if (tablespace != "SYSTEM" || tablespace != "SYSAUX") {
+                while (count.next()) {
+                    x = Integer.valueOf(count.getObject(1).toString());
+                }
             }
-            }
-            reading("./" + tablespace + ".txt",x);
+            reading("./" + tablespace + ".txt", x);
             count.close();
             conn.close();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     static Matriz system;
     static Matriz sysaux;
     static Matriz users;
     static Matriz bschema;
-    
 
     public static void reading(String archivo, int columns) {
         try {
@@ -389,27 +388,27 @@ public class MonitorFrame extends javax.swing.JFrame {
             BufferedReader b = new BufferedReader(f);
             boolean bandera;
             Matriz mat = new Matriz();
-            switch(archivo){
-                case "./SYSTEM.txt":{
-                    system = new Matriz(countRow,629);
+            switch (archivo) {
+                case "./SYSTEM.txt": {
+                    system = new Matriz(countRow, 629);
                     mat = system;
                     break;
                 }
-                case "./SYSAUX.txt":{
-                    sysaux = new Matriz(countRow,876);
+                case "./SYSAUX.txt": {
+                    sysaux = new Matriz(countRow, 876);
                     mat = sysaux;
                     break;
                 }
-                case "./USERS.txt":{
-                    users = new Matriz(countRow,columns);
+                case "./USERS.txt": {
+                    users = new Matriz(countRow, columns);
                     mat = users;
                     break;
                 }
-                case "./BSCHEMA.txt":{
-                    bschema = new Matriz(countRow,columns);
+                case "./BSCHEMA.txt": {
+                    bschema = new Matriz(countRow, columns);
                     mat = bschema;
                     break;
-                }                   
+                }
             }
             while ((cadena = b.readLine()) != null) {
                 Table t1 = new Table();
@@ -420,70 +419,70 @@ public class MonitorFrame extends javax.swing.JFrame {
                 String size = tokens.nextToken().trim();
                 String registros = tokens.nextToken().trim();
                 String index = tokens.nextToken().trim();
-                
-                if(registros == "null"){
+
+                if (registros == "null") {
                     registros = "0";
                 }
 
                 t1.setName(name);
                 t1.setSize(Integer.parseInt(size));
-                try{
-                t1.setRegistros(Integer.parseInt(registros));
-                }catch(Exception e){
+                try {
+                    t1.setRegistros(Integer.parseInt(registros));
+                } catch (Exception e) {
                     t1.setRegistros(0);
-                }  
-                
-                try{
-                t1.setIndex(Integer.parseInt(registros));
-                }catch(Exception e1){
+                }
+
+                try {
+                    t1.setIndex(Integer.parseInt(registros));
+                } catch (Exception e1) {
                     t1.setIndex(0);
                 }
                 bandera = false;
-                for (int i = 0; i < countRow; i++){
-                    if(bandera == true){
+                for (int i = 0; i < countRow; i++) {
+                    if (bandera == true) {
                         break;
                     }
-                for (int j = 0; j < columns; j++){
-                    if(mat.getPosicion(i, j).getName() == t1.getName()){
-                        mat.agregarTabla(t1, i+1, j);
-                        bandera = true;
-                        break;
-                    }else{
-                        if(mat.getPosicion(i, j).getName() == ""){
-                        mat.agregarTabla(t1, i, j);
-                        bandera = true;
-                        break;
-                       }
+                    for (int j = 0; j < columns; j++) {
+                        if (mat.getPosicion(i, j).getName() == t1.getName()) {
+                            mat.agregarTabla(t1, i + 1, j);
+                            bandera = true;
+                            break;
+                        } else {
+                            if (mat.getPosicion(i, j).getName() == "") {
+                                mat.agregarTabla(t1, i, j);
+                                bandera = true;
+                                break;
+                            }
+                        }
                     }
-                }
                 }
             }
-            switch(archivo){
-                case "./SYSTEM.txt":{
+            switch (archivo) {
+                case "./SYSTEM.txt": {
                     system = mat;
                     break;
                 }
-                case "./SYSAUX.txt":{
+                case "./SYSAUX.txt": {
                     sysaux = mat;
                     break;
                 }
-                case "./USERS.txt":{
+                case "./USERS.txt": {
                     users = mat;
                     break;
                 }
-                case "./BSCHEMA.txt":{
+                case "./BSCHEMA.txt": {
                     bschema = mat;
                     break;
-                }                   
+                }
             }
             b.close();
             //System.out.println(system.toString());
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     /*public static void Prueba(){
         boolean bandera = true;
         String t = "REGIONS";
@@ -498,8 +497,7 @@ public class MonitorFrame extends javax.swing.JFrame {
             System.out.println("EXITO!! .... .l. .l. .l.");
         }
     }*/
-    
-   /* public void method() {
+ /* public void method() {
 		ArrayList<ArrayList<Table>> matriz = new ArrayList<ArrayList<Table>>();
 		ArrayList<Table> tablas = new ArrayList<Table>();
 		for(int i=0; i<10; i++) { tablas.add(new Table());}
@@ -511,7 +509,6 @@ public class MonitorFrame extends javax.swing.JFrame {
 			}
 		}
 	}*/
-
     public static void registros(String tablespace) {
         try {
             String ruta = "./" + tablespace + ".txt";
@@ -540,29 +537,29 @@ public class MonitorFrame extends javax.swing.JFrame {
                 } catch (Exception e) {
                     y = "2500";
                 }
-                try{
-                while (registros.next()) {
-                    z = registros.getString(1);
-                    if (z == "null") {
-                        z = "0";
+                try {
+                    while (registros.next()) {
+                        z = registros.getString(1);
+                        if (z == "null") {
+                            z = "0";
+                        }
                     }
-                }
-                }catch(Exception e){
+                } catch (Exception e) {
                     z = "0";
                 }
-                
-                try{
-                while (index.next()) {
-                    w = index.getString(1);
-                    if (w == "null") {
-                        w = "0";
+
+                try {
+                    while (index.next()) {
+                        w = index.getString(1);
+                        if (w == "null") {
+                            w = "0";
+                        }
                     }
-                }
-                }catch(Exception e){
+                } catch (Exception e) {
                     w = "0";
                 }
-                Integer numero= Integer.parseInt(z) + (int)(Math.random() * 500) + 1;               
-                bw.write(x + "," + y + "," +  numero.toString() + "," + w);
+                Integer numero = Integer.parseInt(z) + (int) (Math.random() * 500) + 1;
+                bw.write(x + "," + y + "," + numero.toString() + "," + w);
                 bw.newLine();
             }
             bw.close();
@@ -588,6 +585,5 @@ public class MonitorFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
-
 
 }
