@@ -234,20 +234,24 @@ public class MonitorFrame extends javax.swing.JFrame {
         double var2=0; //hasta hwm
         double porcentaje=0; //porcentaje que tiene el hwm!
         String name = modelo.getValueAt(selectedRow, 0).toString();
-        double promedioDia= users.transTableSpace();
+        double promedioDiaU= users.transTableSpace();
+        int libreU = Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString());
+        libreU = libreU *1024*1024;
+        double diasU =  libreU / promedioDiaU ;
+        double promedioDia= bschema.transTableSpace();
         int libre = Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString());
         libre = libre *1024*1024;
-        double dias =  libre / promedioDia ;
+        double dias =  libre / promedioDia;
         
         switch( name){
             case "USERS": 
-                          var=  Math.round(dias);
+                          var=  Math.round(diasU);
                           porcentaje= Double.parseDouble(modelo.getValueAt(selectedRow, 5).toString())/100;
-                          var2= Math.round(libre*porcentaje / promedioDia);
+                          var2= Math.round(libreU*porcentaje / promedioDiaU);
                           break;
-            case "BSCHEMA": var=  Math.round(Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()) /(bschema.transTableSpace()+20));
+            case "BSCHEMA": var=  Math.round(dias);
                             porcentaje= Double.parseDouble(modelo.getValueAt(selectedRow, 5).toString())/100;
-                            var2= Math.round((porcentaje*Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()))/(bschema.transTableSpace()+20));
+                            var2= Math.round(libre*porcentaje / promedioDia);
                         break;
         
         }
@@ -406,7 +410,7 @@ public class MonitorFrame extends javax.swing.JFrame {
              if (!t.contentEquals("UNDOTBS1") && !t.contentEquals("SYSTEM") && !t.contentEquals("SYSAUX")) {
                 registros(t);*/
                 
-           // creaMatriz("BSCHEMA");
+            creaMatriz("BSCHEMA");
             //}              
            //            }
             tablespaces.close();
