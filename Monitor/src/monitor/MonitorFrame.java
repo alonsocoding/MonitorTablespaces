@@ -227,8 +227,24 @@ public class MonitorFrame extends javax.swing.JFrame {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         int selectedRow = jTable1.getSelectedRow();
-        double x = users.transTableSpace();
+        //---------COdigo nuevo-------------------
+        double var=0; //hasta limite 100%
+        double var2=0; //hasta hwm
+        double porcentaje=0; //porcentaje que tiene el hwm!
+        String name = modelo.getValueAt(selectedRow, 0).toString();
+        switch( name){
+            case "USERS": var=  Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()) /(users.transTableSpace()*2048);
+                          porcentaje= Double.parseDouble(modelo.getValueAt(selectedRow, 5).toString())/100;
+                          var2= (porcentaje*Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()))/(users.transTableSpace()*2048);break;
+            case "BSCHEMA": var=  Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()) /(bschema.transTableSpace()*2048);
+                          porcentaje= Double.parseDouble(modelo.getValueAt(selectedRow, 5).toString())/100;
+                          var2= (porcentaje*Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()))/(bschema.transTableSpace()*2048);break;
+        
+        }
+        //Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()) /
+        //-----------------------------------------------------------------------------------------------------------------
 
+            
         dataset.addValue((Number) modelo.getValueAt(selectedRow, 1), "Used Space", modelo.getValueAt(selectedRow, 0).toString());
         dataset.addValue((Number) modelo.getValueAt(selectedRow, 2), "Free Space", modelo.getValueAt(selectedRow, 0).toString());
 
@@ -260,7 +276,8 @@ public class MonitorFrame extends javax.swing.JFrame {
         renderer.setBaseItemLabelGenerator(lblGenerator);
         renderer.setBaseItemLabelsVisible(true);
         renderer.setBaseItemLabelPaint(Color.black);
-        renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator("<html>{0} <br> Tablespace {1} <br> {2} ({3}) <br> Dias restantes : {2323} </html>", NumberFormat.getInstance()));
+          renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator("<html>{0} <br> Tablespace {1} <br> {2} ({3}) <br> Dias restantes para llenar espacio total: "+ var+"<br>"
+                + "Dias restantes para alcanzar hwm: "+var2+"</html>", NumberFormat.getInstance()));
 
     }//GEN-LAST:event_jTable1MouseClicked
 
