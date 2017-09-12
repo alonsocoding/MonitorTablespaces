@@ -13,7 +13,7 @@ public class Monitor {
     static String bd = "XE";
     static String username = "bases";
     static String password = "bases";
-    static String url = "jdbc:oracle:thin:@alonso-PC:1521:XE";
+    static String url = "jdbc:oracle:thin:@Josema:1521:XE";
 
     public static Connection Enlace(Connection conn) throws SQLException {
         try {
@@ -93,6 +93,7 @@ public class Monitor {
         while(n < x) {
             st = Sta(st);
             rs = st.executeQuery("insert into testing values('nombre','apellido',12)");
+            rs = st.executeQuery("commit");
             n++;
         }
         return rs;
