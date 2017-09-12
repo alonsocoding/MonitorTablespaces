@@ -278,7 +278,7 @@ public class Registros extends javax.swing.JFrame {
                 }
 
                 try {
-                    t1.setIndex(Integer.parseInt(registros));
+                    t1.setIndex(Integer.parseInt(index));
                 } catch (Exception e1) {
                     t1.setIndex(0);
                 }

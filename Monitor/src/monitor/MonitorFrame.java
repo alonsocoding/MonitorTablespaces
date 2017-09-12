@@ -433,7 +433,7 @@ public class MonitorFrame extends javax.swing.JFrame {
                 }
 
                 try {
-                    t1.setIndex(Integer.parseInt(registros));
+                    t1.setIndex(Integer.parseInt(index));
                 } catch (Exception e1) {
                     t1.setIndex(0);
                 }
@@ -483,32 +483,6 @@ public class MonitorFrame extends javax.swing.JFrame {
         }
     }
 
-    /*public static void Prueba(){
-        boolean bandera = true;
-        String t = "REGIONS";
-        for (int i = 0; i < 4; i++)
-            {
-                if(mat.getPosicion(i, 0).getName() != "")
-                    if(t != mat.getPosicion(i, 0).getName()){
-                        bandera = false;
-                    }
-            }
-        if(bandera){
-            System.out.println("EXITO!! .... .l. .l. .l.");
-        }
-    }*/
- /* public void method() {
-		ArrayList<ArrayList<Table>> matriz = new ArrayList<ArrayList<Table>>();
-		ArrayList<Table> tablas = new ArrayList<Table>();
-		for(int i=0; i<10; i++) { tablas.add(new Table());}
-		for(int i=0; i<10; i++) { matriz.add(tablas); }
-		int suma = 0;
-		for(int i=0; i<10; i++) { 
-			for(int j=0; j<10; j++) {
-				suma += matriz.get(i).get(j).getRegistros(); 
-			}
-		}
-	}*/
     public static void registros(String tablespace) {
         try {
             String ruta = "./" + tablespace + ".txt";

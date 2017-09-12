@@ -13,7 +13,7 @@ public class Monitor {
     static String bd = "XE";
     static String username = "bases";
     static String password = "bases";
-    static String url = "jdbc:oracle:thin:@LAPTOP-I8IV3KN9:1522:XE";
+    static String url = "jdbc:oracle:thin:@chuchu:1521:XE";
 
     public static Connection Enlace(Connection conn) throws SQLException {
         try {
