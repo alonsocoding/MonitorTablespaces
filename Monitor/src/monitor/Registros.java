@@ -151,6 +151,7 @@ public class Registros extends javax.swing.JFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
         Object selected = jComboBox1.getSelectedItem();
+        eliminar();
         llenaMatriz(selected.toString());
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
@@ -189,6 +190,21 @@ public class Registros extends javax.swing.JFrame {
                 new Registros().setVisible(true);
             }
         });
+    }
+    
+    public void eliminar(){
+        modelo = (DefaultTableModel) jTable2.getModel();
+        int a = jTable2.getRowCount()-1;
+        for (int i = a; i >= 0; i--) {           
+        modelo.removeRow(modelo.getRowCount()-1);
+        }
+        jTable2.setModel(modelo);
+        /*int b = jTable2.getColumnCount()-1;
+        for (int i = b; i >= 0; i--) {           
+        modelo.removeColumn(modelo.getColumnCount()-1);*/
+        
+        //}
+        //cargaTicket();
     }
 
     public static void creaMatriz(String tablespace) {
@@ -240,9 +256,9 @@ public class Registros extends javax.swing.JFrame {
         modelo.addColumn("Tamaño indices (bytes)");
         Object[] tablas2 = new Object[bschema.getNumeroColumnas() + 1];
         Table t2 = new Table();
-        for (int i = 0; i < users.getNumeroFilas(); i++) {
-            for (int j = 0; j < users.getNumeroColumnas(); j++) {
-                t2 = users.getMat().get(i).get(j);
+        for (int i = 0; i < bschema.getNumeroFilas(); i++) {
+            for (int j = 0; j < bschema.getNumeroColumnas(); j++) {
+                t2 = bschema.getMat().get(i).get(j);
                 tablas2[0] = t2.getName();
                 tablas2[1] = t2.getSize();
                 tablas2[2] = t2.getRegistros();
@@ -253,6 +269,8 @@ public class Registros extends javax.swing.JFrame {
                 break;
         }
     }
+    
+    
 
     static Matriz users;
     static Matriz bschema;
@@ -261,8 +279,14 @@ public class Registros extends javax.swing.JFrame {
     public static void reading(String archivo, int columns) {
         try {
             String cadena;
+            String count = "";
             FileReader f = new FileReader(archivo);
             BufferedReader b = new BufferedReader(f);
+            FileReader f1 = new FileReader("./count.txt");
+            BufferedReader b1 = new BufferedReader(f1);
+            count = b1.readLine();
+            int count_num = Integer.parseInt(count);
+            countRow = count_num;
             boolean bandera;
             Matriz mat = new Matriz();
             switch (archivo) {

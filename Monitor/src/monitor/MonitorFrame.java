@@ -333,24 +333,37 @@ public class MonitorFrame extends javax.swing.JFrame {
         t.start();
 
     }
-    static int countRow = 4;
+    static int countRow = 2;
 
     public static void guardarRegistros() {
         try {
             ResultSet tablespaces = null;
             conn = Monitor.Enlace(conn);
             tablespaces = Monitor.Res(tablespaces);
+            File counter = new File("./count.txt");          
+            String count = "0";
+            if(counter.exists()) {
+                BufferedReader bfr = new BufferedReader(new FileReader(counter));
+                count = bfr.readLine(); // Lee archivo variable count
+            }
+            int count_num = Integer.parseInt(count);
+            count_num += 1; // Suma uno y guarda en archivo
+            BufferedWriter bfw = new BufferedWriter(new FileWriter(counter));
+            bfw.write(count_num+"");
+            bfw.close();
+            countRow = count_num;
             String t = "";
             //while (tablespaces.next()) {
             registros("USERS");
-            registros("BSCHEMA");
-            //  t = tablespaces.getObject(1).toString();
-            // if (!t.contentEquals("UNDOTBS1")) {
-            //    registros(t);
             creaMatriz("USERS");
+            registros("BSCHEMA");
+            /*t = tablespaces.getObject(1).toString();
+             if (!t.contentEquals("UNDOTBS1") && !t.contentEquals("SYSTEM") && !t.contentEquals("SYSAUX")) {
+                registros(t);*/
+                
             creaMatriz("BSCHEMA");
             //}              
-            //           }
+           //            }
             tablespaces.close();
             conn.close();
         } catch (Exception e) {
@@ -365,7 +378,7 @@ public class MonitorFrame extends javax.swing.JFrame {
             ResultSet count = null;
             count = Monitor.countTables(count, tablespace);
             int x = 0;
-            if (tablespace != "SYSTEM" || tablespace != "SYSAUX") {
+            if (tablespace != "SYSTEM" && tablespace != "SYSAUX") {
                 while (count.next()) {
                     x = Integer.valueOf(count.getObject(1).toString());
                 }
@@ -516,7 +529,7 @@ public class MonitorFrame extends javax.swing.JFrame {
                 try {
                     while (registros.next()) {
                         z = registros.getString(1);
-                        if (z == "null") {
+                        if ("null".equals(z)) {
                             z = "0";
                         }
                     }
@@ -534,8 +547,8 @@ public class MonitorFrame extends javax.swing.JFrame {
                 } catch (Exception e) {
                     w = "0";
                 }
-                Integer numero = Integer.parseInt(z) + (int) (Math.random() * 500) + 1;
-                bw.write(x + "," + y + "," + numero.toString() + "," + w);
+                
+                bw.write(x + "," + y + "," + z + "," + w);
                 bw.newLine();
             }
             bw.close();
@@ -544,26 +557,9 @@ public class MonitorFrame extends javax.swing.JFrame {
             registros.close();
             conn.close();
             
-            // Guarda el numero en el archivo count.txt
-            File counter = new File("./count.txt");
-            
-            String count = "0";
-            if(counter.exists()) {
-                BufferedReader bfr = new BufferedReader(new FileReader(counter));
-                count = bfr.readLine(); // Lee archivo variable count
-            }
-            int count_num = Integer.parseInt(count);
-            count_num += 1; // Suma uno y guarda en archivo
-            System.out.println(count_num);
-            BufferedWriter bfw = new BufferedWriter(new FileWriter(counter));
-            bfw.write(count_num+"");
-            bfw.close();
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
-       
-
     }
 
 
