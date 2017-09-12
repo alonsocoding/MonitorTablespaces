@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import javax.swing.table.DefaultTableModel;
+import static monitor.Registros.modelo;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -60,6 +61,12 @@ public class MonitorFrame extends javax.swing.JFrame {
     public MonitorFrame() {
         initComponents();
         this.jTable1.setModel(modelo);
+        modelo.addColumn("Tablespace");
+        modelo.addColumn("Used MB");
+        modelo.addColumn("Free MB");
+        modelo.addColumn("Total MB");
+        modelo.addColumn("Pct.Free");
+        modelo.addColumn("HWM");
     }
 
     /**
@@ -194,11 +201,6 @@ public class MonitorFrame extends javax.swing.JFrame {
             ResultSetMetaData Res_md = res.getMetaData();
             int cantidad_columnas = Res_md.getColumnCount();
             // Agrega las columnas necesarias
-            for (int i = 1; i <= cantidad_columnas; i++) {
-                modelo.addColumn(Res_md.getColumnLabel(i));
-            }
-            // Agrega una extra para HWM
-            modelo.addColumn("HWM");
             // Ingresa a la tabla las filas 
             while (res.next()) {
                 Object[] fila = new Object[cantidad_columnas + 1];
@@ -232,10 +234,16 @@ public class MonitorFrame extends javax.swing.JFrame {
         double var2=0; //hasta hwm
         double porcentaje=0; //porcentaje que tiene el hwm!
         String name = modelo.getValueAt(selectedRow, 0).toString();
+        double promedioDia= users.transTableSpace();
+        int libre = Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString());
+        libre = libre *1024*1024;
+        double dias =  libre / promedioDia ;
+        
         switch( name){
-            case "USERS": var=  Math.round(Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()) / (users.transTableSpace()+20));
+            case "USERS": 
+                          var=  Math.round(dias);
                           porcentaje= Double.parseDouble(modelo.getValueAt(selectedRow, 5).toString())/100;
-                          var2= Math.round((porcentaje*Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()))/(users.transTableSpace()+20));
+                          var2= Math.round(libre*porcentaje / promedioDia);
                           break;
             case "BSCHEMA": var=  Math.round(Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()) /(bschema.transTableSpace()+20));
                             porcentaje= Double.parseDouble(modelo.getValueAt(selectedRow, 5).toString())/100;
@@ -353,14 +361,15 @@ public class MonitorFrame extends javax.swing.JFrame {
 
     }
     static int countRow = 2;
+    static int constante = 100;
 
     public static void guardarRegistros() {
         try {
             // Ahi inserta la cantidad que diga
-            ResultSet inserts = null;
+          /*  ResultSet inserts = null;
             conn = Monitor.Enlace(conn);
             inserts = Monitor.insertTest(10); // Cantidad
-            
+            */
             ResultSet tablespaces = null;
             conn = Monitor.Enlace(conn);
             tablespaces = Monitor.Res(tablespaces);
@@ -376,6 +385,18 @@ public class MonitorFrame extends javax.swing.JFrame {
             bfw.write(count_num+"");
             bfw.close();
             countRow = count_num;
+            File constante1 = new File("./count1.txt");          
+            String count1 = "0";
+            if(constante1.exists()) {
+                BufferedReader bfr1 = new BufferedReader(new FileReader(constante1));
+                count1 = bfr1.readLine(); // Lee archivo variable count
+            }
+            int count_num1 = Integer.parseInt(count1);
+            count_num1 += 100; // Suma uno y guarda en archivo
+            BufferedWriter bfw1 = new BufferedWriter(new FileWriter(constante1));
+            bfw1.write(count_num1+"");
+            bfw1.close();
+            constante = count_num1;
             String t = "";
             //while (tablespaces.next()) {
             registros("USERS");
@@ -385,7 +406,7 @@ public class MonitorFrame extends javax.swing.JFrame {
              if (!t.contentEquals("UNDOTBS1") && !t.contentEquals("SYSTEM") && !t.contentEquals("SYSAUX")) {
                 registros(t);*/
                 
-            creaMatriz("BSCHEMA");
+           // creaMatriz("BSCHEMA");
             //}              
            //            }
             tablespaces.close();
@@ -428,28 +449,10 @@ public class MonitorFrame extends javax.swing.JFrame {
             boolean bandera;
             Matriz mat = new Matriz();
             switch (archivo) {
-                case "./SYSTEM.txt": {
-                    system = new Matriz(countRow, 629);
-                    mat = system;
-                    break;
-                }
-                case "./SYSAUX.txt": {
-                    sysaux = new Matriz(countRow, 876);
-                    mat = sysaux;
-                    break;
-                }
+                
                 case "./USERS.txt": {
                     users = new Matriz(countRow, columns);
-                    mat = users;
-                    break;
-                }
-                case "./BSCHEMA.txt": {
-                    bschema = new Matriz(countRow, columns);
-                    mat = bschema;
-                    break;
-                }
-            }
-            while ((cadena = b.readLine()) != null) {
+                    while ((cadena = b.readLine()) != null) {
                 Table t1 = new Table();
 
                 StringTokenizer tokens = new StringTokenizer(cadena, ",");
@@ -482,13 +485,13 @@ public class MonitorFrame extends javax.swing.JFrame {
                         break;
                     }
                     for (int j = 0; j < columns; j++) {
-                        if (mat.getPosicion(i, j).getName() == t1.getName()) {
-                            mat.agregarTabla(t1, i + 1, j);
+                        if (users.getPosicion(i, j).getName() == t1.getName()) {
+                            users.agregarTabla(t1, i + 1, j);
                             bandera = true;
                             break;
                         } else {
-                            if (mat.getPosicion(i, j).getName() == "") {
-                                mat.agregarTabla(t1, i, j);
+                            if (users.getPosicion(i, j).getName() == "") {
+                                users.agregarTabla(t1, i, j);
                                 bandera = true;
                                 break;
                             }
@@ -496,21 +499,57 @@ public class MonitorFrame extends javax.swing.JFrame {
                     }
                 }
             }
-            switch (archivo) {
-                case "./SYSTEM.txt": {
-                    system = mat;
-                    break;
-                }
-                case "./SYSAUX.txt": {
-                    sysaux = mat;
-                    break;
-                }
-                case "./USERS.txt": {
-                    users = mat;
                     break;
                 }
                 case "./BSCHEMA.txt": {
-                    bschema = mat;
+                    bschema = new Matriz(countRow, columns);
+                    while ((cadena = b.readLine()) != null) {
+                Table t1 = new Table();
+
+                StringTokenizer tokens = new StringTokenizer(cadena, ",");
+
+                String name = tokens.nextToken().trim();
+                String size = tokens.nextToken().trim();
+                String registros = tokens.nextToken().trim();
+                String index = tokens.nextToken().trim();
+
+                if (registros == "null") {
+                    registros = "0";
+                }
+
+                t1.setName(name);
+                t1.setSize(Integer.parseInt(size));
+                try {
+                    t1.setRegistros(Integer.parseInt(registros));
+                } catch (Exception e) {
+                    t1.setRegistros(0);
+                }
+
+                try {
+                    t1.setIndex(Integer.parseInt(index));
+                } catch (Exception e1) {
+                    t1.setIndex(0);
+                }
+                bandera = false;
+                for (int i = 0; i < countRow; i++) {
+                    if (bandera == true) {
+                        break;
+                    }
+                    for (int j = 0; j < columns; j++) {
+                        if (bschema.getPosicion(i, j).getName() == t1.getName()) {
+                            bschema.agregarTabla(t1, i + 1, j);
+                            bandera = true;
+                            break;
+                        } else {
+                            if (bschema.getPosicion(i, j).getName() == "") {
+                                bschema.agregarTabla(t1, i, j);
+                                bandera = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
                     break;
                 }
             }
@@ -571,8 +610,9 @@ public class MonitorFrame extends javax.swing.JFrame {
                 } catch (Exception e) {
                     w = "0";
                 }
+                Integer suma = Integer.parseInt(z) + constante;
                 
-                bw.write(x + "," + y + "," + z + "," + w);
+                bw.write(x + "," + y + "," + suma.toString() + "," + w);
                 bw.newLine();
             }
             bw.close();

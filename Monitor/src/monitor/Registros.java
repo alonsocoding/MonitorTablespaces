@@ -65,6 +65,10 @@ public class Registros extends javax.swing.JFrame {
     public Registros() {
         initComponents();
         this.jTable2.setModel(modelo);
+        modelo.addColumn("Nombre de la tabla");
+        modelo.addColumn("Tamaño (bytes)");
+        modelo.addColumn("Cantidad de registros");
+        modelo.addColumn("Tamaño indices (bytes)");
     }
 
     /**
@@ -136,8 +140,8 @@ public class Registros extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -231,10 +235,6 @@ public class Registros extends javax.swing.JFrame {
             case "USERS":    
         
         creaMatriz("USERS");
-        modelo.addColumn("Nombre de la tabla");
-        modelo.addColumn("Tamaño (bytes)");
-        modelo.addColumn("Cantidad de registros");
-        modelo.addColumn("Tamaño indices (bytes)");
         Object[] tablas = new Object[4];
         Table t1 = new Table();
         for (int i = 0; i < users.getNumeroFilas(); i++) {
@@ -250,10 +250,6 @@ public class Registros extends javax.swing.JFrame {
         break;
             case "BSCHEMA":
                 creaMatriz("BSCHEMA");
-        modelo.addColumn("Nombre de la tabla");
-        modelo.addColumn("Tamaño (bytes)");
-        modelo.addColumn("Cantidad de registros");
-        modelo.addColumn("Tamaño indices (bytes)");
         Object[] tablas2 = new Object[4];
         Table t2 = new Table();
         for (int i = 0; i < bschema.getNumeroFilas(); i++) {

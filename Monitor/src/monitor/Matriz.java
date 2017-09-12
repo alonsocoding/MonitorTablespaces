@@ -93,7 +93,7 @@ public class Matriz {
    
    public ArrayList diarias(){
    ArrayList transacciones = new ArrayList();
-       double suma = 0;
+        double suma = 0;
        ArrayList promedios = promedio();
        double acumulado = 0;
        for (int i = 0; i < columnas; i++){
@@ -109,7 +109,7 @@ public class Matriz {
    }
    
    public double transTableSpace(){
-       double suma = 0;
+       int suma = 0;
        ArrayList diarias = diarias();
        for (int i = 0; i < diarias.size(); i++){
            String x = diarias.get(i).toString();
