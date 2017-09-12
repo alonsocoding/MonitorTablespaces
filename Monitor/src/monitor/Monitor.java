@@ -13,7 +13,7 @@ public class Monitor {
     static String bd = "XE";
     static String username = "bases";
     static String password = "bases";
-    static String url = "jdbc:oracle:thin:@chuchu:1521:XE";
+    static String url = "jdbc:oracle:thin:@alonso-PC:1521:XE";
 
     public static Connection Enlace(Connection conn) throws SQLException {
         try {
@@ -85,6 +85,16 @@ public class Monitor {
     public static ResultSet sizeIndex(ResultSet rs, String table) throws SQLException {
         st = Sta(st);
         rs = st.executeQuery("select SUM(column_length) from all_ind_columns where table_name = '" + table + "'");
+        return rs;
+    }
+    
+    public static ResultSet insertTest(int x) throws Exception {
+        int n =0;
+        while(n < x) {
+            st = Sta(st);
+            rs = st.executeQuery("insert into testing values('nombre','apellido',12)");
+            n++;
+        }
         return rs;
     }
 

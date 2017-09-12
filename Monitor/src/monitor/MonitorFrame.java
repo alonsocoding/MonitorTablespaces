@@ -337,6 +337,11 @@ public class MonitorFrame extends javax.swing.JFrame {
 
     public static void guardarRegistros() {
         try {
+            // Ahi inserta la cantidad que diga
+            ResultSet inserts = null;
+            conn = Monitor.Enlace(conn);
+            inserts = Monitor.insertTest(10); // Cantidad
+            
             ResultSet tablespaces = null;
             conn = Monitor.Enlace(conn);
             tablespaces = Monitor.Res(tablespaces);
