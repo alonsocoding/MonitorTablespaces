@@ -343,10 +343,12 @@ public class MonitorFrame extends javax.swing.JFrame {
             String t = "";
             //while (tablespaces.next()) {
             registros("USERS");
+            registros("BSCHEMA");
             //  t = tablespaces.getObject(1).toString();
             // if (!t.contentEquals("UNDOTBS1")) {
             //    registros(t);
             creaMatriz("USERS");
+            creaMatriz("BSCHEMA");
             //}              
             //           }
             tablespaces.close();
@@ -541,10 +543,26 @@ public class MonitorFrame extends javax.swing.JFrame {
             sizeof.close();
             registros.close();
             conn.close();
-
+            
+            // Guarda el numero en el archivo count.txt
+            File counter = new File("./count.txt");
+            
+            String count = "0";
+            if(counter.exists()) {
+                BufferedReader bfr = new BufferedReader(new FileReader(counter));
+                count = bfr.readLine(); // Lee archivo variable count
+            }
+            int count_num = Integer.parseInt(count);
+            count_num += 1; // Suma uno y guarda en archivo
+            System.out.println(count_num);
+            BufferedWriter bfw = new BufferedWriter(new FileWriter(counter));
+            bfw.write(count_num+"");
+            bfw.close();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
+       
 
     }
 

@@ -87,7 +87,7 @@ public class Registros extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         jLabel1.setText("Seleccione el Tablespace para leer el historial de transaciones:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "USERS" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "USERS", "BSCHEMA", " " }));
         jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jComboBox1MouseClicked(evt);
@@ -151,9 +151,7 @@ public class Registros extends javax.swing.JFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
         Object selected = jComboBox1.getSelectedItem();
-        if (selected.toString().equals("USERS")) {
-            llenaMatriz();
-        }
+        llenaMatriz(selected.toString());
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
@@ -212,7 +210,10 @@ public class Registros extends javax.swing.JFrame {
         }
     }
 
-    public void llenaMatriz() {
+    public void llenaMatriz(String tablespace_name) {
+        switch(tablespace_name) {
+            case "USERS":    
+        
         creaMatriz("USERS");
         modelo.addColumn("Nombre de la tabla");
         modelo.addColumn("Tamaño (bytes)");
@@ -229,6 +230,27 @@ public class Registros extends javax.swing.JFrame {
                 tablas[3] = t1.getIndex();
                 modelo.addRow(tablas);
             }
+        }
+        break;
+            case "BSCHEMA":
+                creaMatriz("BSCHEMA");
+        modelo.addColumn("Nombre de la tabla");
+        modelo.addColumn("Tamaño (bytes)");
+        modelo.addColumn("Cantidad de registros");
+        modelo.addColumn("Tamaño indices (bytes)");
+        Object[] tablas2 = new Object[bschema.getNumeroColumnas() + 1];
+        Table t2 = new Table();
+        for (int i = 0; i < users.getNumeroFilas(); i++) {
+            for (int j = 0; j < users.getNumeroColumnas(); j++) {
+                t2 = users.getMat().get(i).get(j);
+                tablas2[0] = t2.getName();
+                tablas2[1] = t2.getSize();
+                tablas2[2] = t2.getRegistros();
+                tablas2[3] = t2.getIndex();
+                modelo.addRow(tablas2);
+            }
+        }
+                break;
         }
     }
 
