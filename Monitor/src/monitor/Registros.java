@@ -235,7 +235,7 @@ public class Registros extends javax.swing.JFrame {
         modelo.addColumn("Tamaño (bytes)");
         modelo.addColumn("Cantidad de registros");
         modelo.addColumn("Tamaño indices (bytes)");
-        Object[] tablas = new Object[users.getNumeroColumnas() + 1];
+        Object[] tablas = new Object[4];
         Table t1 = new Table();
         for (int i = 0; i < users.getNumeroFilas(); i++) {
             for (int j = 0; j < users.getNumeroColumnas(); j++) {
@@ -254,7 +254,7 @@ public class Registros extends javax.swing.JFrame {
         modelo.addColumn("Tamaño (bytes)");
         modelo.addColumn("Cantidad de registros");
         modelo.addColumn("Tamaño indices (bytes)");
-        Object[] tablas2 = new Object[bschema.getNumeroColumnas() + 1];
+        Object[] tablas2 = new Object[4];
         Table t2 = new Table();
         for (int i = 0; i < bschema.getNumeroFilas(); i++) {
             for (int j = 0; j < bschema.getNumeroColumnas(); j++) {
