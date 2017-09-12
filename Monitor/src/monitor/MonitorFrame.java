@@ -233,12 +233,14 @@ public class MonitorFrame extends javax.swing.JFrame {
         double porcentaje=0; //porcentaje que tiene el hwm!
         String name = modelo.getValueAt(selectedRow, 0).toString();
         switch( name){
-            case "USERS": var=  Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()) /(users.transTableSpace()*2048);
+            case "USERS": var=  Math.round(Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()) / (users.transTableSpace()+20));
                           porcentaje= Double.parseDouble(modelo.getValueAt(selectedRow, 5).toString())/100;
-                          var2= (porcentaje*Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()))/(users.transTableSpace()*2048);break;
-            case "BSCHEMA": var=  Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()) /(bschema.transTableSpace()*2048);
-                          porcentaje= Double.parseDouble(modelo.getValueAt(selectedRow, 5).toString())/100;
-                          var2= (porcentaje*Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()))/(bschema.transTableSpace()*2048);break;
+                          var2= Math.round((porcentaje*Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()))/(users.transTableSpace()+20));
+                          break;
+            case "BSCHEMA": var=  Math.round(Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()) /(bschema.transTableSpace()+20));
+                            porcentaje= Double.parseDouble(modelo.getValueAt(selectedRow, 5).toString())/100;
+                            var2= Math.round((porcentaje*Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()))/(bschema.transTableSpace()+20));
+                        break;
         
         }
         //Integer.parseInt(modelo.getValueAt(selectedRow, 2).toString()) /
