@@ -55,6 +55,7 @@ public class MonitorFrame extends javax.swing.JFrame {
     static Statement sta = null;
     static ResultSet res = null;
     static DefaultTableModel modelo = new DefaultTableModel();
+    static DefaultTableModel modelo2 = new DefaultTableModel();
 
     /**
      * Creates new form MonitorFrame
@@ -62,12 +63,14 @@ public class MonitorFrame extends javax.swing.JFrame {
     public MonitorFrame() {
         initComponents();
         this.jTable1.setModel(modelo);
+        this.jTable2.setModel(modelo2);
         modelo.addColumn("Tablespace");
         modelo.addColumn("Used MB");
         modelo.addColumn("Free MB");
         modelo.addColumn("Total MB");
         modelo.addColumn("Pct.Free");
         modelo.addColumn("HWM");
+        modelo2.addColumn("Sentence");
     }
 
     /**
@@ -408,6 +411,7 @@ public class MonitorFrame extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String hwm = "";
+        registroSGA();
         try {
         FileReader f = new FileReader("./sga_hwm.txt");
         BufferedReader b = new BufferedReader(f);
@@ -421,7 +425,7 @@ public class MonitorFrame extends javax.swing.JFrame {
         sga_dataset.addValue( 120 , "sga" , "12/04/16" );
         sga_dataset.addValue( 240 , "sga" , "12/04/12" );
         sga_dataset.addValue( 300 , "sga" , "12/04/13" );
-        JFreeChart chart = ChartFactory.createLineChart( "Chart",
+        JFreeChart chart = ChartFactory.createLineChart( "SGA",
          "Tiempo","Uso de SGA",
          sga_dataset,
          PlotOrientation.VERTICAL,
@@ -505,21 +509,10 @@ public class MonitorFrame extends javax.swing.JFrame {
             }
         });
         t.start();
-        Thread t2 = new Thread(new Runnable() {
-            public void run() {
-                agregarSGA();
-                System.out.format("Termine...");
-            }
-        });
-        t2.start();
 
     }
     static int countRow = 2;
     static int constante = 100;
-
-    public static void agregarSGA() {
-
-    }
     
     public static void guardarRegistros() {
         try {
@@ -783,8 +776,36 @@ public class MonitorFrame extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    
+    public static void registroSGA() {
+       try {
+            // Lectura de Archivo para columna HWM
+            String texto = "";
+            FileWriter lector = new FileWriter("./sga_data.txt");
+            BufferedWriter contenido = new BufferedWriter(lector);
+            // Conexion con base y lanza sql
+            conn = Monitor.Enlace(conn);
+            res = Monitor.sgaRegistro(res);
+            // Obtiene la cantidad de columnas
+            ResultSetMetaData Res_md = res.getMetaData();
+            int cantidad_columnas = Res_md.getColumnCount();
+            // Agrega las columnas necesarias
+            // Ingresa a la tabla las filas 
+            while (res.next()) {
+                Object[] fila = new Object[cantidad_columnas + 1];
+                for (int i = 0; i < cantidad_columnas; i++) {
+                        fila[i] = res.getObject(i+1); // Ingresa valor desde SQL
+                        contenido.write(res.getObject(i+1)+"");
+                }
+                modelo2.addRow(fila); // Ingresa la fila al table model
+            }
+            res.close();
+            conn.close();
 
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

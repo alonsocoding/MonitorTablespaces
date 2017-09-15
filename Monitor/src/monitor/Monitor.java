@@ -62,6 +62,29 @@ public class Monitor {
         rs = st.executeQuery("select table_name FROM dba_tables where tablespace_name='" + tablespace + "'");
         return rs;
     }
+    
+    public static ResultSet sgaData(ResultSet rs) throws SQLException {
+        st = Sta(st);
+        rs = st.executeQuery("select round(used.bytes /1024/1024 ,2) used_mb\n" +
+        ", round(free.bytes /1024/1024 ,2) free_mb\n" +
+        ", round(tot.bytes /1024/1024 ,2) total_mb\n" +
+        "from (select sum(bytes) bytes\n" +
+        "from v$sgastat\n" +
+        "where name != 'free memory') used\n" +
+        ", (select sum(bytes) bytes\n" +
+        "from v$sgastat\n" +
+        "where name = 'free memory') free\n" +
+        ", (select sum(bytes) bytes\n" +
+        "from v$sgastat) tot \n" +
+        "/");
+        return rs;
+    }
+    
+    public static ResultSet sgaRegistro(ResultSet rs) throws SQLException {
+        st = Sta(st);
+        rs = st.executeQuery("select sql_text from v$sql");
+        return rs;
+    }
 
     public static ResultSet sizeOfTable(ResultSet rs, String table) throws SQLException {
         st = Sta(st);
