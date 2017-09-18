@@ -13,7 +13,7 @@ public class Monitor {
     static String bd = "XE";
     static String username = "bases";
     static String password = "bases";
-    static String url = "jdbc:oracle:thin:@Josema:1521:XE";
+    static String url = "jdbc:oracle:thin:@alonso-PC:1521:XE";
 
     public static Connection Enlace(Connection conn) throws SQLException {
         try {
@@ -85,7 +85,17 @@ public class Monitor {
         rs = st.executeQuery("select sql_text from v$sql");
         return rs;
     }
-
+    public static ResultSet sgaRegistros(ResultSet rs) throws SQLException {
+        st = Sta(st);
+        rs = st.executeQuery("select  distinct vs.sql_text,vs.executions,vs.buffer_gets,to_char(to_date(vs.first_load_time,'YYYY-MM-DD/HH24:MI:SS'),'MM/DD  HH24:MI:SS') first_load_time,\n" +
+        " vs.parsing_user_id, au.USERNAME parseuser from v$sqlarea vs , all_users au where (parsing_user_id != 0)  AND \n" +
+        "(au.user_id(+)=vs.parsing_user_id)  \n" +
+        "and (executions >= 1) order by   buffer_gets/executions desc");
+        return rs;
+    }
+    
+    // Link: http://www.ajpdsoft.com/modules.php?name=News&file=article&sid=131
+    
     public static ResultSet sizeOfTable(ResultSet rs, String table) throws SQLException {
         st = Sta(st);
         rs = st.executeQuery("select SUM(data_length) from all_tab_columns where table_name = '" + table + "'");
