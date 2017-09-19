@@ -556,6 +556,8 @@ public class MonitorFrame extends javax.swing.JFrame {
         
         Thread t2 = new Thread(new Runnable() {
             public void run() {
+                int cont = 0;
+                int cont2 = 5;
                 while(true) {
                     try {
                     Thread.sleep(2000);
@@ -585,6 +587,11 @@ public class MonitorFrame extends javax.swing.JFrame {
             int segundos = calendario.get(Calendar.SECOND);
             System.out.println(hora + ":" + minutos + ":" + segundos);
             sga_dataset.addValue((int) Double.parseDouble(usado), "SGA USED", hora+":"+minutos+":"+segundos);
+            cont ++;
+            if(cont>cont2){
+            sga_dataset.removeColumn(0);
+            cont2++;
+            }
                     } catch(Exception e) {
                         e.printStackTrace();
                     }
