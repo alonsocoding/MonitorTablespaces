@@ -13,7 +13,7 @@ public class Monitor {
     static String bd = "XE";
     static String username = "bases";
     static String password = "bases";
-    static String url = "jdbc:oracle:thin:@David-Chaves:1521:XE";
+    static String url = "jdbc:oracle:thin:@alonso-PC:1521:XE";
 
     public static Connection Enlace(Connection conn) throws SQLException {
         try {
@@ -75,8 +75,7 @@ public class Monitor {
         "from v$sgastat\n" +
         "where name = 'free memory') free\n" +
         ", (select sum(bytes) bytes\n" +
-        "from v$sgastat) tot \n" +
-        "/");
+        "from v$sgastat) tot \n");
         return rs;
     }
     

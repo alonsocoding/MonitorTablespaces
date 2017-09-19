@@ -450,15 +450,46 @@ public class MonitorFrame extends javax.swing.JFrame {
         jPanel2.add(CP, BorderLayout.CENTER);
         jPanel2.validate();
         
+
+        
+        double hwmReal = 0;
+        // Calcula el hwm
+        try {
+            String total = "";
+            conn = Monitor.Enlace(conn);
+            res = Monitor.sgaData(res);
+            ResultSetMetaData Res_md = res.getMetaData();
+            int cantidad_columnas = Res_md.getColumnCount();
+            // Agrega las columnas necesarias
+            // Ingresa a la tabla las filas 
+            while (res.next()) {
+                Object[] fila = new Object[cantidad_columnas];
+                for (int i = 0; i < cantidad_columnas; i++) {
+                        fila[i] = res.getObject(i + 1); // Ingresa valor desde SQL
+                        if(i == cantidad_columnas-1) {
+                            total = fila[i].toString();
+                            
+                        }
+                }
+            }
+            res.close();
+            conn.close();
+            
+            
+            hwmReal = (int) (Double.parseDouble(total) * Integer.parseInt(hwm) / 100);
+            System.out.println(total+"total");
+            System.out.println(hwmReal+"real");
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         Stroke stroke = new BasicStroke(2.0f);
-        ValueMarker marker = new ValueMarker(Double.parseDouble(hwm));  // position is the value on the axis
+        ValueMarker marker = new ValueMarker(hwmReal);  // position is the value on the axis
         marker.setPaint(Color.yellow);
         marker.setStroke(stroke);
 
         CategoryPlot plot1 = chart.getCategoryPlot();
         plot1.addRangeMarker(marker, Layer.FOREGROUND);
-
-  
+        
 
         
     }//GEN-LAST:event_jButton3ActionPerformed
