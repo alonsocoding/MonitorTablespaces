@@ -590,7 +590,6 @@ public class MonitorFrame extends javax.swing.JFrame {
             cont ++;
             if(cont>cont2){
             sga_dataset.removeColumn(0);
-            cont2++;
             }
                     } catch(Exception e) {
                         e.printStackTrace();
