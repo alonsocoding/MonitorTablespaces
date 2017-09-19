@@ -13,7 +13,7 @@ public class Monitor {
     static String bd = "XE";
     static String username = "bases";
     static String password = "bases";
-    static String url = "jdbc:oracle:thin:@alonso-PC:1521:XE";
+    static String url = "jdbc:oracle:thin:@David-Chaves:1521:XE";
 
     public static Connection Enlace(Connection conn) throws SQLException {
         try {
@@ -115,9 +115,9 @@ public class Monitor {
         return rs;
     }
 
-    public static ResultSet sizeIndex(ResultSet rs, String table) throws SQLException {
+    public static ResultSet sizeIndex(ResultSet rs, String table, String tablespace) throws SQLException {
         st = Sta(st);
-        rs = st.executeQuery("select SUM(column_length) from all_ind_columns where table_name = '" + table + "'");
+        rs = st.executeQuery("select SUM(a1.suma) from(select SUM(column_length)as suma from all_ind_columns where table_name = '"+table+"')a1, (select table_name from all_indexes where tablespace_name = '"+tablespace+"')a2 where a2.table_name ='"+table+"'");
         return rs;
     }
     

@@ -746,7 +746,7 @@ public class MonitorFrame extends javax.swing.JFrame {
                     x = tables.getObject(1).toString();
                     sizeof = Monitor.sizeOfTable(res, x);
                     registros = Monitor.countRegister(res, x);
-                    index = Monitor.sizeIndex(res, x);
+                    index = Monitor.sizeIndex(res, x,tablespace);
                     while (sizeof.next()) {
                         y = sizeof.getObject(1).toString();
                     }
